@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Location Tracker</title>
+<link href__="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-attachment: fixed;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  min-height: 100vh;
+}
+
+.container {
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  color: white;
+  margin-bottom: 30px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+}
+
+.header h1 {
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  margin-bottom: 15px;
+  text-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.header p {
+  font-size: clamp(0.9rem, 3vw, 1.1rem);
+  opacity: 0.9;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+.status-card {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  margin-bottom: 25px;
+}
+
+.status-info {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.status-item {
+  text-align: center;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.status-item .label {
+  font-size: 0.85rem;
+  opacity: 0.8;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.status-item .value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #ffd700;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.tracking-status {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  padding: 15px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.tracking-status.active {
+  background: rgba(76, 175, 80, 0.3);
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.tracking-status.inactive {
+  background: rgba(244, 67, 54, 0.3);
+  border-color: rgba(244, 67, 54, 0.5);
+}
+
+.pulse {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #4caf50;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.5;
+    transform: scale(1.3);
+  }
+}
+
+.controls {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  padding: 14px 28px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(0,0,0,0.3);
+}
+
+.btn-start {
+  background: rgba(76, 175, 80, 0.4);
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
+.btn-start:hover {
+  background: rgba(76, 175, 80, 0.6);
+}
+
+.btn-stop {
+  background: rgba(244, 67, 54, 0.4);
+  border-color: rgba(244, 67, 54, 0.5);
+}
+
+.btn-stop:hover {
+  background: rgba(244, 67, 54, 0.6);
+}
+
+.btn-clear {
+  background: rgba(255, 152, 0, 0.4);
+  border-color: rgba(255, 152, 0, 0.5);
+}
+
+.btn-clear:hover {
+  background: rgba(255, 152, 0, 0.6);
+}
+
+.btn-export {
+  background: rgba(33, 150, 243, 0.4);
+  border-color: rgba(33, 150, 243, 0.5);
+}
+
+.btn-export:hover {
+  background: rgba(33, 150, 243, 0.6);
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.table-container {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  overflow-x: auto;
+}
+
+.table-container h2 {
+  color: white;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+thead {
+  background: rgba(102, 126, 234, 0.4);
+  backdrop-filter: blur(10px);
+}
+
+th {
+  padding: 15px;
+  text-align: left;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 0.9rem;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+td {
+  padding: 12px 15px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  font-size: 0.95rem;
+  color: rgba(255, 255, 255, 0.95);
+}
+
+tbody tr {
+  transition: all 0.3s;
+}
+
+tbody tr:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+tbody tr:nth-child(even) {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.no-data {
+  text-align: center;
+  padding: 60px 20px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.1rem;
+}
+
+.no-data-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  opacity: 0.3;
+}
+
+.btn-delete {
+  background: rgba(244, 67, 54, 0.3);
+  border: 1px solid rgba(244, 67, 54, 0.5);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.3s;
+}
+
+.btn-delete:hover {
+  background: rgba(244, 67, 54, 0.5);
+  transform: scale(1.05);
+}
+
+.map-link {
+  color: #64b5f6;
+  text-decoration: none;
+  transition: all 0.3s;
+}
+
+.map-link:hover {
+  color: #90caf9;
+  text-decoration: underline;
+}
+
+.toast {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: rgba(40, 167, 69, 0.95);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 16px 24px;
+  border-radius: 10px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+  z-index: 9999;
+  animation: slideIn 0.3s, slideOut 0.3s 2.7s;
+  font-size: 1rem;
+  max-width: 350px;
+}
+
+.toast.warning {
+  background: rgba(255, 193, 7, 0.95);
+}
+
+.toast.error {
+  background: rgba(220, 53, 69, 0.95);
+}
+
+@keyframes slideIn {
+  from { transform: translateX(400px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOut {
+  from { transform: translateX(0); opacity: 1; }
+  to { transform: translateX(400px); opacity: 0; }
+}
+
+@media (max-width: 768px) {
+  body {
+    padding: 1rem;
+  }
+  
+  .controls {
+    flex-direction: column;
+  }
+  
+  .btn {
+    width: 100%;
+  }
+  
+  .status-info {
+    grid-template-columns: 1fr;
+  }
+  
+  table {
+    font-size: 0.85rem;
+  }
+  
+  th, td {
+    padding: 10px 8px;
+  }
+  
+  .toast {
+    right: 10px;
+    left: 10px;
+    bottom: 10px;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <h1>
+      <span>📍</span>
+      GPS Location Tracker
+    </h1>
+    <p>Real-time location tracking every 2 seconds</p>
+  </div>
+
+  <div class="status-card">
+    <div class="status-info">
+      <div class="status-item">
+        <div class="label">Total Records</div>
+        <div class="value" id="totalRecords">0</div>
+      </div>
+      <div class="status-item">
+        <div class="label">Current Latitude</div>
+        <div class="value" id="currentLat">--</div>
+      </div>
+      <div class="status-item">
+        <div class="label">Current Longitude</div>
+        <div class="value" id="currentLng">--</div>
+      </div>
+      <div class="status-item">
+        <div class="label">Accuracy</div>
+        <div class="value" id="currentAccuracy">--</div>
+      </div>
+    </div>
+
+    <div class="tracking-status" id="trackingStatus">
+      <span class="pulse" style="background: #f44336;"></span>
+      <span>Tracking Stopped</span>
+    </div>
+
+    <div class="controls" style="margin-top: 20px;">
+      <button class="btn btn-start" id="startBtn" onclick="startTracking()">
+        ▶️ Start Tracking
+      </button>
+      <button class="btn btn-stop" id="stopBtn" onclick="stopTracking()" disabled>
+        ⏸️ Stop Tracking
+      </button>
+      <button class="btn btn-export" onclick="exportToCSV()">
+        📥 Export CSV
+      </button>
+      <button class="btn btn-clear" onclick="confirmClearData()">
+        🗑️ Clear All Data
+      </button>
+    </div>
+  </div>
+
+  <div class="table-container">
+    <h2>📊 Location History</h2>
+    <table id="locationTable">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Timestamp</th>
+          <th>Latitude</th>
+          <th>Longitude</th>
+          <th>Accuracy (m)</th>
+          <th>Speed (m/s)</th>
+          <th>Map</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody id="locationTableBody">
+        <tr>
+          <td colspan="8" class="no-data">
+            <div class="no-data-icon">📍</div>
+            <div>No location data yet. Click "Start Tracking" to begin.</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+let trackingInterval = null;
+let locationData = JSON.parse(localStorage.getItem('locationData')) || [];
+let isTracking = false;
+
+// Initialize on page load
+window.addEventListener('load', () => {
+  renderTable();
+  updateStatistics();
+});
+
+function startTracking() {
+  if (!navigator.geolocation) {
+    showToast('❌ Geolocation is not supported by your browser', 'error');
+    return;
+  }
+
+  isTracking = true;
+  document.getElementById('startBtn').disabled = true;
+  document.getElementById('stopBtn').disabled = false;
+  
+  const statusEl = document.getElementById('trackingStatus');
+  statusEl.className = 'tracking-status active';
+  statusEl.innerHTML = '<span class="pulse"></span><span>Tracking Active</span>';
+
+  // Get location immediately
+  getCurrentLocation();
+
+  // Then get location every 2 seconds
+  trackingInterval = setInterval(() => {
+    getCurrentLocation();
+  }, 2000);
+
+  showToast('✅ Location tracking started');
+}
+
+function stopTracking() {
+  isTracking = false;
+  clearInterval(trackingInterval);
+  trackingInterval = null;
+  
+  document.getElementById('startBtn').disabled = false;
+  document.getElementById('stopBtn').disabled = true;
+  
+  const statusEl = document.getElementById('trackingStatus');
+  statusEl.className = 'tracking-status inactive';
+  statusEl.innerHTML = '<span class="pulse" style="background: #f44336;"></span><span>Tracking Stopped</span>';
+
+  showToast('⏸️ Location tracking stopped', 'warning');
+}
+
+function getCurrentLocation() {
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const locationEntry = {
+        id: Date.now(),
+        timestamp: new Date().toISOString(),
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        accuracy: position.coords.accuracy,
+        speed: position.coords.speed || 0,
+        altitude: position.coords.altitude || 0,
+        heading: position.coords.heading || 0
+      };
+
+      locationData.unshift(locationEntry);
+      localStorage.setItem('locationData', JSON.stringify(locationData));
+      
+      renderTable();
+      updateStatistics();
+      updateCurrentLocation(locationEntry);
+    },
+    (error) => {
+      console.error('Geolocation error:', error);
+      let errorMessage = 'Failed to get location';
+      
+      switch(error.code) {
+        case error.PERMISSION_DENIED:
+          errorMessage = '❌ Location permission denied. Please enable location access.';
+          stopTracking();
+          break;
+        case error.POSITION_UNAVAILABLE:
+          errorMessage = '⚠️ Location information unavailable';
+          break;
+        case error.TIMEOUT:
+          errorMessage = '⏱️ Location request timed out';
+          break;
+      }
+      
+      showToast(errorMessage, 'error');
+    },
+    {
+      enableHighAccuracy: true,
+      timeout: 5000,
+      maximumAge: 0
+    }
+  );
+}
+
+function updateCurrentLocation(location) {
+  document.getElementById('currentLat').textContent = location.latitude.toFixed(6);
+  document.getElementById('currentLng').textContent = location.longitude.toFixed(6);
+  document.getElementById('currentAccuracy').textContent = location.accuracy.toFixed(1) + ' m';
+}
+
+function renderTable() {
+  const tbody = document.getElementById('locationTableBody');
+  
+  if (locationData.length === 0) {
+    tbody.innerHTML = `
+      <tr>
+        <td colspan="8" class="no-data">
+          <div class="no-data-icon">📍</div>
+          <div>No location data yet. Click "Start Tracking" to begin.</div>
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  tbody.innerHTML = locationData.map((location, index) => `
+    <tr>
+      <td>${locationData.length - index}</td>
+      <td>${formatDateTime(location.timestamp)}</td>
+      <td>${location.latitude.toFixed(6)}</td>
+      <td>${location.longitude.toFixed(6)}</td>
+      <td>${location.accuracy.toFixed(1)}</td>
+      <td>${location.speed ? location.speed.toFixed(2) : '0.00'}</td>
+      <td>
+        <a href__="https://www.google.com/maps?q=${location.latitude},${location.longitude}" 
+           target="_blank" 
+           class="map-link">
+          🗺️ View
+        </a>
+      </td>
+      <td>
+        <button class="btn-delete" onclick="deleteLocation(${location.id})">
+          🗑️
+        </button>
+      </td>
+    </tr>
+  `).join('');
+}
+
+function updateStatistics() {
+  document.getElementById('totalRecords').textContent = locationData.length;
+}
+
+function deleteLocation(id) {
+  if (confirm('Delete this location record?')) {
+    locationData = locationData.filter(loc => loc.id !== id);
+    localStorage.setItem('locationData', JSON.stringify(locationData));
+    renderTable();
+    updateStatistics();
+    showToast('🗑️ Location deleted');
+  }
+}
+
+function confirmClearData() {
+  if (locationData.length === 0) {
+    showToast('⚠️ No data to clear', 'warning');
+    return;
+  }
+
+  if (confirm(`Are you sure you want to delete ALL ${locationData.length} location records?\n\nThis action cannot be undone!`)) {
+    locationData = [];
+    localStorage.setItem('locationData', JSON.stringify(locationData));
+    renderTable();
+    updateStatistics();
+    
+    document.getElementById('currentLat').textContent = '--';
+    document.getElementById('currentLng').textContent = '--';
+    document.getElementById('currentAccuracy').textContent = '--';
+    
+    showToast('🗑️ All location data cleared');
+  }
+}
+
+function exportToCSV() {
+  if (locationData.length === 0) {
+    showToast('⚠️ No data to export', 'warning');
+    return;
+  }
+
+  const headers = ['#', 'Timestamp', 'Latitude', 'Longitude', 'Accuracy (m)', 'Speed (m/s)', 'Altitude (m)', 'Heading (°)'];
+  const csvContent = [
+    headers.join(','),
+    ...locationData.map((loc, index) => [
+      locationData.length - index,
+      loc.timestamp,
+      loc.latitude,
+      loc.longitude,
+      loc.accuracy.toFixed(1),
+      loc.speed ? loc.speed.toFixed(2) : '0',
+      loc.altitude ? loc.altitude.toFixed(1) : '0',
+      loc.heading ? loc.heading.toFixed(1) : '0'
+    ].join(','))
+  ].join('\n');
+
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  const url = URL.createObjectURL(blob);
+  
+  link.setAttribute('href', url);
+  link.setAttribute('download', `location_data_${new Date().toISOString().split('T')[0]}.csv`);
+  link.style.visibility = 'hidden';
+  
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  showToast(`📥 Exported ${locationData.length} records to CSV`);
+}
+
+function formatDateTime(isoString) {
+  const date = new Date(isoString);
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  });
+}
+
+function showToast(message, type = 'success') {
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  if (type === 'warning') toast.classList.add('warning');
+  if (type === 'error') toast.classList.add('error');
+  toast.textContent = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3000);
+}
+
+// Stop tracking when page is closed or refreshed
+window.addEventListener('beforeunload', () => {
+  if (isTracking) {
+    stopTracking();
+  }
+});
+</script>
+
+</body>
+</html>
