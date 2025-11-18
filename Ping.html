@@ -3,8 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Location Tracker</title>
+<title>GPS Location Tracker with Map</title>
 <link href__="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href__="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <style>
 * {
   box-sizing: border-box;
@@ -216,6 +217,103 @@ body {
   cursor: not-allowed;
 }
 
+.view-tabs {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  justify-content: center;
+}
+
+.tab-btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.tab-btn.active {
+  background: rgba(102, 126, 234, 0.5);
+  border-color: rgba(102, 126, 234, 0.7);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.tab-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.content-section {
+  display: none;
+}
+
+.content-section.active {
+  display: block;
+}
+
+.map-container {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 15px;
+  padding: 25px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  margin-bottom: 25px;
+}
+
+.map-container h2 {
+  color: white;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  font-size: clamp(1.2rem, 4vw, 1.8rem);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+#map {
+  height: 500px;
+  width: 100%;
+  border-radius: 10px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.map-controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+
+.map-control-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.map-control-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: translateY(-1px);
+}
+
+.map-control-btn.active {
+  background: rgba(76, 175, 80, 0.4);
+  border-color: rgba(76, 175, 80, 0.5);
+}
+
 .table-container {
   background: rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(25px);
@@ -353,6 +451,33 @@ tbody tr:nth-child(even) {
   to { transform: translateX(400px); opacity: 0; }
 }
 
+/* Leaflet Popup Customization */
+.leaflet-popup-content-wrapper {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.leaflet-popup-content {
+  font-family: 'Poppins', sans-serif;
+  color: #333;
+  margin: 15px;
+}
+
+.popup-time {
+  font-weight: bold;
+  color: #667eea;
+  margin-bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.popup-coords {
+  font-size: 0.85rem;
+  color: #666;
+  margin: 3px 0;
+}
+
 @media (max-width: 768px) {
   body {
     padding: 1rem;
@@ -370,6 +495,10 @@ tbody tr:nth-child(even) {
     grid-template-columns: 1fr;
   }
   
+  #map {
+    height: 400px;
+  }
+  
   table {
     font-size: 0.85rem;
   }
@@ -383,6 +512,14 @@ tbody tr:nth-child(even) {
     left: 10px;
     bottom: 10px;
   }
+  
+  .view-tabs {
+    flex-direction: column;
+  }
+  
+  .tab-btn {
+    width: 100%;
+  }
 }
 </style>
 </head>
@@ -394,7 +531,7 @@ tbody tr:nth-child(even) {
       <span>📍</span>
       GPS Location Tracker
     </h1>
-    <p>Real-time location tracking every 2 seconds</p>
+    <p>Real-time location tracking with live map visualization</p>
   </div>
 
   <div class="status-card">
@@ -412,8 +549,8 @@ tbody tr:nth-child(even) {
         <div class="value" id="currentLng">--</div>
       </div>
       <div class="status-item">
-        <div class="label">Accuracy</div>
-        <div class="value" id="currentAccuracy">--</div>
+        <div class="label">Distance Traveled</div>
+        <div class="value" id="totalDistance">0 km</div>
       </div>
     </div>
 
@@ -438,42 +575,141 @@ tbody tr:nth-child(even) {
     </div>
   </div>
 
-  <div class="table-container">
-    <h2>📊 Location History</h2>
-    <table id="locationTable">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Timestamp</th>
-          <th>Latitude</th>
-          <th>Longitude</th>
-          <th>Accuracy (m)</th>
-          <th>Speed (m/s)</th>
-          <th>Map</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody id="locationTableBody">
-        <tr>
-          <td colspan="8" class="no-data">
-            <div class="no-data-icon">📍</div>
-            <div>No location data yet. Click "Start Tracking" to begin.</div>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+  <div class="view-tabs">
+    <button class="tab-btn active" onclick="switchView('map')">
+      🗺️ Map View
+    </button>
+    <button class="tab-btn" onclick="switchView('table')">
+      📊 Table View
+    </button>
+  </div>
+
+  <div id="mapView" class="content-section active">
+    <div class="map-container">
+      <h2>🗺️ Live Tracking Map</h2>
+      <div class="map-controls">
+        <button class="map-control-btn" id="followBtn" onclick="toggleFollow()">
+          📍 Follow Location
+        </button>
+        <button class="map-control-btn" onclick="fitMapToRoute()">
+          🔍 Fit to Route
+        </button>
+        <button class="map-control-btn" onclick="togglePath()">
+          🛣️ Show/Hide Path
+        </button>
+      </div>
+      <div id="map"></div>
+    </div>
+  </div>
+
+  <div id="tableView" class="content-section">
+    <div class="table-container">
+      <h2>📊 Location History</h2>
+      <table id="locationTable">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Timestamp</th>
+            <th>Latitude</th>
+            <th>Longitude</th>
+            <th>Accuracy (m)</th>
+            <th>Speed (m/s)</th>
+            <th>Map</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="locationTableBody">
+          <tr>
+            <td colspan="8" class="no-data">
+              <div class="no-data-icon">📍</div>
+              <div>No location data yet. Click "Start Tracking" to begin.</div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 </div>
 
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script>
 let trackingInterval = null;
 let locationData = JSON.parse(localStorage.getItem('locationData')) || [];
 let isTracking = false;
 
+// Map variables
+let map = null;
+let currentMarker = null;
+let routePath = null;
+let markers = [];
+let followMode = false;
+let showPath = true;
+
+// Custom icons
+const currentIcon = L.divIcon({
+  className: 'custom-div-icon',
+  html: `<div style="
+    background: #4caf50;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 3px solid white;
+    box-shadow: 0 0 10px rgba(76, 175, 80, 0.8);
+    animation: pulse 2s infinite;
+  "></div>`,
+  iconSize: [20, 20],
+  iconAnchor: [10, 10]
+});
+
+const startIcon = L.divIcon({
+  className: 'custom-div-icon',
+  html: `<div style="
+    background: #2196F3;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.6);
+  "></div>`,
+  iconSize: [16, 16],
+  iconAnchor: [8, 8]
+});
+
+const pointIcon = L.divIcon({
+  className: 'custom-div-icon',
+  html: `<div style="
+    background: #667eea;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 5px rgba(102, 126, 234, 0.5);
+  "></div>`,
+  iconSize: [10, 10],
+  iconAnchor: [5, 5]
+});
+
+// Initialize map
+function initMap() {
+  if (!map) {
+    map = L.map('map').setView([0, 0], 2);
+    
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© OpenStreetMap contributors',
+      maxZoom: 19
+    }).addTo(map);
+
+    // Add scale control
+    L.control.scale().addTo(map);
+  }
+}
+
 // Initialize on page load
 window.addEventListener('load', () => {
+  initMap();
   renderTable();
   updateStatistics();
+  loadMapData();
 });
 
 function startTracking() {
@@ -536,6 +772,7 @@ function getCurrentLocation() {
       renderTable();
       updateStatistics();
       updateCurrentLocation(locationEntry);
+      updateMap(locationEntry);
     },
     (error) => {
       console.error('Geolocation error:', error);
@@ -567,7 +804,191 @@ function getCurrentLocation() {
 function updateCurrentLocation(location) {
   document.getElementById('currentLat').textContent = location.latitude.toFixed(6);
   document.getElementById('currentLng').textContent = location.longitude.toFixed(6);
-  document.getElementById('currentAccuracy').textContent = location.accuracy.toFixed(1) + ' m';
+}
+
+function updateMap(location) {
+  const latLng = [location.latitude, location.longitude];
+  
+  // Update or create current position marker
+  if (currentMarker) {
+    currentMarker.setLatLng(latLng);
+  } else {
+    currentMarker = L.marker(latLng, { icon: currentIcon }).addTo(map);
+    currentMarker.bindPopup(`
+      <div class="popup-time">📍 Current Position</div>
+      <div class="popup-coords">Lat: ${location.latitude.toFixed(6)}</div>
+      <div class="popup-coords">Lng: ${location.longitude.toFixed(6)}</div>
+      <div class="popup-coords">Accuracy: ${location.accuracy.toFixed(1)}m</div>
+    `);
+  }
+  
+  // Add point marker
+  const pointMarker = L.marker(latLng, { icon: pointIcon }).addTo(map);
+  pointMarker.bindPopup(`
+    <div class="popup-time">${formatDateTime(location.timestamp)}</div>
+    <div class="popup-coords">Lat: ${location.latitude.toFixed(6)}</div>
+    <div class="popup-coords">Lng: ${location.longitude.toFixed(6)}</div>
+    <div class="popup-coords">Speed: ${location.speed.toFixed(2)} m/s</div>
+  `);
+  markers.push(pointMarker);
+  
+  // Update route path
+  updatePath();
+  
+  // Center map on current location if follow mode is on
+  if (followMode || markers.length === 1) {
+    map.setView(latLng, 16);
+  }
+}
+
+function updatePath() {
+  if (!showPath) return;
+  
+  const pathPoints = locationData.slice().reverse().map(loc => [loc.latitude, loc.longitude]);
+  
+  if (routePath) {
+    routePath.setLatLngs(pathPoints);
+  } else if (pathPoints.length > 1) {
+    routePath = L.polyline(pathPoints, {
+      color: '#667eea',
+      weight: 4,
+      opacity: 0.7,
+      smoothFactor: 1
+    }).addTo(map);
+  }
+}
+
+function loadMapData() {
+  if (locationData.length === 0) return;
+  
+  // Clear existing markers
+  markers.forEach(marker => map.removeLayer(marker));
+  markers = [];
+  if (routePath) {
+    map.removeLayer(routePath);
+    routePath = null;
+  }
+  
+  // Add all location points
+  locationData.slice().reverse().forEach((location, index) => {
+    const latLng = [location.latitude, location.longitude];
+    const isFirst = index === 0;
+    const isLast = index === locationData.length - 1;
+    
+    let marker;
+    if (isLast) {
+      marker = L.marker(latLng, { icon: currentIcon }).addTo(map);
+      currentMarker = marker;
+    } else if (isFirst) {
+      marker = L.marker(latLng, { icon: startIcon }).addTo(map);
+    } else {
+      marker = L.marker(latLng, { icon: pointIcon }).addTo(map);
+    }
+    
+    marker.bindPopup(`
+      <div class="popup-time">${isLast ? '📍 Current' : isFirst ? '🚩 Start' : '📍'} ${formatDateTime(location.timestamp)}</div>
+      <div class="popup-coords">Lat: ${location.latitude.toFixed(6)}</div>
+      <div class="popup-coords">Lng: ${location.longitude.toFixed(6)}</div>
+      <div class="popup-coords">Accuracy: ${location.accuracy.toFixed(1)}m</div>
+      <div class="popup-coords">Speed: ${location.speed.toFixed(2)} m/s</div>
+    `);
+    
+    markers.push(marker);
+  });
+  
+  // Draw path
+  updatePath();
+  
+  // Fit map to show all points
+  if (markers.length > 0) {
+    fitMapToRoute();
+  }
+}
+
+function fitMapToRoute() {
+  if (markers.length === 0) return;
+  
+  const group = L.featureGroup(markers);
+  map.fitBounds(group.getBounds().pad(0.1));
+}
+
+function toggleFollow() {
+  followMode = !followMode;
+  const btn = document.getElementById('followBtn');
+  
+  if (followMode) {
+    btn.classList.add('active');
+    if (currentMarker) {
+      map.setView(currentMarker.getLatLng(), 16);
+    }
+    showToast('📍 Follow mode enabled');
+  } else {
+    btn.classList.remove('active');
+    showToast('📍 Follow mode disabled', 'warning');
+  }
+}
+
+function togglePath() {
+  showPath = !showPath;
+  
+  if (showPath) {
+    updatePath();
+    showToast('🛣️ Path shown');
+  } else {
+    if (routePath) {
+      map.removeLayer(routePath);
+      routePath = null;
+    }
+    showToast('🛣️ Path hidden', 'warning');
+  }
+}
+
+function switchView(view) {
+  const mapView = document.getElementById('mapView');
+  const tableView = document.getElementById('tableView');
+  const tabs = document.querySelectorAll('.tab-btn');
+  
+  tabs.forEach(tab => tab.classList.remove('active'));
+  
+  if (view === 'map') {
+    mapView.classList.add('active');
+    tableView.classList.remove('active');
+    tabs[0].classList.add('active');
+    setTimeout(() => map.invalidateSize(), 100);
+  } else {
+    mapView.classList.remove('active');
+    tableView.classList.add('active');
+    tabs[1].classList.add('active');
+  }
+}
+
+function calculateTotalDistance() {
+  if (locationData.length < 2) return 0;
+  
+  let totalDistance = 0;
+  const sortedData = locationData.slice().reverse();
+  
+  for (let i = 1; i < sortedData.length; i++) {
+    const lat1 = sortedData[i - 1].latitude;
+    const lon1 = sortedData[i - 1].longitude;
+    const lat2 = sortedData[i].latitude;
+    const lon2 = sortedData[i].longitude;
+    
+    totalDistance += getDistanceInKm(lat1, lon1, lat2, lon2);
+  }
+  
+  return totalDistance;
+}
+
+function getDistanceInKm(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radius of Earth in km
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+  const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
 }
 
 function renderTable() {
@@ -611,6 +1032,9 @@ function renderTable() {
 
 function updateStatistics() {
   document.getElementById('totalRecords').textContent = locationData.length;
+  
+  const distance = calculateTotalDistance();
+  document.getElementById('totalDistance').textContent = distance.toFixed(2) + ' km';
 }
 
 function deleteLocation(id) {
@@ -619,6 +1043,7 @@ function deleteLocation(id) {
     localStorage.setItem('locationData', JSON.stringify(locationData));
     renderTable();
     updateStatistics();
+    loadMapData();
     showToast('🗑️ Location deleted');
   }
 }
@@ -632,12 +1057,24 @@ function confirmClearData() {
   if (confirm(`Are you sure you want to delete ALL ${locationData.length} location records?\n\nThis action cannot be undone!`)) {
     locationData = [];
     localStorage.setItem('locationData', JSON.stringify(locationData));
+    
+    // Clear map
+    markers.forEach(marker => map.removeLayer(marker));
+    markers = [];
+    if (routePath) {
+      map.removeLayer(routePath);
+      routePath = null;
+    }
+    if (currentMarker) {
+      map.removeLayer(currentMarker);
+      currentMarker = null;
+    }
+    
     renderTable();
     updateStatistics();
     
     document.getElementById('currentLat').textContent = '--';
     document.getElementById('currentLng').textContent = '--';
-    document.getElementById('currentAccuracy').textContent = '--';
     
     showToast('🗑️ All location data cleared');
   }
