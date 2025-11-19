@@ -2083,7 +2083,7 @@ Driver Trip Tracker</h1>
 
     <!-- CHECKLIST TAB -->
     <div id="checklistTab" class="tab-content">
-      <h2>✅ Vehicle Inspection Checklist</h2>
+      <h2>✔️ Vehicle Inspection Checklist</h2>
       <form id="checklistForm">
         <div class="form-grid">
           <div class="form-group">
@@ -2163,7 +2163,7 @@ Driver Trip Tracker</h1>
         <button type="button" class="btn btn-secondary" id="checklistCancelBtn" style="display: none;">Cancel</button>
       </form>
 
-      <h2 style="margin-top: 40px;">✅ Checklist History</h2>
+      <h2 style="margin-top: 40px;">✔️ Checklist History</h2>
       <div class="filter-bar">
         <input type="text" id="checklistSearchInput" placeholder="🔍 Search checklists...">
         <input type="text" id="checklistFilterDriver" placeholder="👤 Driver Name">
@@ -2348,7 +2348,7 @@ document.getElementById('vehicleForm').addEventListener('submit', (e) => {
   document.getElementById('vehicleSubmitBtnText').textContent = '💾 Save Vehicle Cost';
   document.getElementById('vehicleCancelBtn').style.display = 'none';
   
-  showToast('✅ Vehicle cost saved successfully!');
+  showToast('✔️ Vehicle cost saved successfully!');
 });
 
 document.getElementById('vehicleCancelBtn').addEventListener('click', () => {
@@ -2473,7 +2473,7 @@ function applyGlobalFilter() {
   renderChecklists();
   renderIncidents();
   updateStatistics();
-  showToast('✅ Filter applied successfully');
+  showToast('✔️ Filter applied successfully');
 }
 
 function clearGlobalFilter() {
@@ -2486,7 +2486,7 @@ function clearGlobalFilter() {
   renderChecklists();
   renderIncidents();
   updateStatistics();
-  showToast('✅ Filter cleared');
+  showToast('✔️ Filter cleared');
 }
 
 function isWithinGlobalDateRange(dateString) {
@@ -2766,10 +2766,10 @@ document.getElementById('tripForm').addEventListener('submit', (e) => {
     editingTripId = null;
     document.getElementById('submitBtnText').textContent = 'Add Trip';
     document.getElementById('cancelBtn').style.display = 'none';
-    showToast('✅ Trip updated successfully!');
+    showToast('✔️ Trip updated successfully!');
   } else {
     trips.unshift(trip);
-    showToast('✅ Trip saved successfully!');
+    showToast('✔️ Trip saved successfully!');
   }
   saveTrips();
   renderTrips();
@@ -2813,10 +2813,10 @@ document.getElementById('fuelForm').addEventListener('submit', (e) => {
     editingFuelId = null;
     document.getElementById('fuelSubmitBtnText').textContent = 'Add Fuel Entry';
     document.getElementById('fuelCancelBtn').style.display = 'none';
-    showToast('✅ Fuel entry updated successfully!');
+    showToast('✔️ Fuel entry updated successfully!');
   } else {
     fuelEntries.unshift(fuelEntry);
-    showToast('✅ Fuel entry saved successfully!');
+    showToast('✔️ Fuel entry saved successfully!');
   }
   saveFuel();
   renderFuel();
@@ -2856,10 +2856,10 @@ document.getElementById('serviceForm').addEventListener('submit', (e) => {
     editingServiceId = null;
     document.getElementById('serviceSubmitBtnText').textContent = 'Set Reminder';
     document.getElementById('serviceCancelBtn').style.display = 'none';
-    showToast('✅ Service reminder updated successfully!');
+    showToast('✔️ Service reminder updated successfully!');
   } else {
     serviceReminders.unshift(service);
-    showToast('✅ Service reminder set successfully!');
+    showToast('✔️ Service reminder set successfully!');
   }
   saveServiceReminders();
   renderServiceReminders();
@@ -2901,10 +2901,10 @@ document.getElementById('checklistForm').addEventListener('submit', (e) => {
     editingChecklistId = null;
     document.getElementById('checklistSubmitBtnText').textContent = 'Save Checklist';
     document.getElementById('checklistCancelBtn').style.display = 'none';
-    showToast('✅ Checklist updated successfully!');
+    showToast('✔️ Checklist updated successfully!');
   } else {
     checklists.unshift(checklist);
-    showToast('✅ Checklist saved successfully!');
+    showToast('✔️ Checklist saved successfully!');
   }
   saveChecklists();
   renderChecklists();
@@ -2938,10 +2938,10 @@ document.getElementById('incidentForm').addEventListener('submit', (e) => {
     editingIncidentId = null;
     document.getElementById('incidentSubmitBtnText').textContent = 'Report Incident';
     document.getElementById('incidentCancelBtn').style.display = 'none';
-    showToast('✅ Incident report updated successfully!');
+    showToast('✔️ Incident report updated successfully!');
   } else {
     incidents.unshift(incident);
-    showToast('✅ Incident report saved successfully!');
+    showToast('✔️ Incident report saved successfully!');
   }
   saveIncidents();
   renderIncidents();
@@ -3135,7 +3135,7 @@ function renderServiceReminders() {
         <div class="trip-detail"><div class="icon">🚗</div><div class="content"><div class="label">Vehicle</div><div class="value">${service.vehicleReg}</div></div></div>
         <div class="trip-detail"><div class="icon">📊</div><div class="content"><div class="label">Current KM</div><div class="value">${currentKm.toFixed(1)} km</div></div></div>
         <div class="trip-detail"><div class="icon">🎯</div><div class="content"><div class="label">Service Due At</div><div class="value">${service.nextServiceKm.toFixed(1)} km</div></div></div>
-        <div class="trip-detail"><div class="icon">${isOverdue ? '🚨' : isDueSoon ? '⚠️' : '✅'}</div><div class="content"><div class="label">Status</div><div class="value" style="color: ${isOverdue ? '#fca5a5' : isDueSoon ? '#fde047' : '#86efac'}">${isOverdue ? 'OVERDUE by ' + Math.abs(kmRemaining).toFixed(0) + ' km!' : isDueSoon ? kmRemaining.toFixed(0) + ' km remaining' : kmRemaining.toFixed(0) + ' km remaining'}</div></div></div>
+        <div class="trip-detail"><div class="icon">${isOverdue ? '🚨' : isDueSoon ? '⚠️' : '✔️'}</div><div class="content"><div class="label">Status</div><div class="value" style="color: ${isOverdue ? '#fca5a5' : isDueSoon ? '#fde047' : '#86efac'}">${isOverdue ? 'OVERDUE by ' + Math.abs(kmRemaining).toFixed(0) + ' km!' : isDueSoon ? kmRemaining.toFixed(0) + ' km remaining' : kmRemaining.toFixed(0) + ' km remaining'}</div></div></div>
       </div>
       ${service.notes ? `<div class="trip-notes">📝 ${service.notes}</div>` : ''}
     </div>
@@ -3157,7 +3157,7 @@ function renderChecklists() {
   });
   
   if (filteredChecklists.length === 0) {
-    checklistList.innerHTML = `<div class="no-trips"><div class="icon">✅</div><h3>No checklists found</h3><p>Try adjusting your filters!</p></div>`;
+    checklistList.innerHTML = `<div class="no-trips"><div class="icon">✔️</div><h3>No checklists found</h3><p>Try adjusting your filters!</p></div>`;
     return;
   }
   
@@ -3168,7 +3168,7 @@ function renderChecklists() {
     return `
     <div class="checklist-item">
       <div class="trip-header">
-        <div class="checklist-date">✅ ${formatDate(checklist.date)}${formatTimestamp(checklist.lastModified)}</div>
+        <div class="checklist-date">✔️ ${formatDate(checklist.date)}${formatTimestamp(checklist.lastModified)}</div>
         <div class="trip-actions">
           <span class="status-badge ${allPassed ? 'status-ok' : 'status-issue'}">${allPassed ? '✓ All OK' : '⚠️ Issues Found'}</span>
           <button class="btn btn-small btn-delete" onclick="deleteChecklist(${checklist.id})">🗑️ Delete</button>
@@ -3182,12 +3182,12 @@ function renderChecklists() {
       </div>
       <div style="margin-top: 15px;"><strong style="color: white;">Checklist Results:</strong>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; color: white;">
-          <div>${checklist.items.tires ? '✅' : '❌'} Tires</div><div>${checklist.items.oil ? '✅' : '❌'} Engine Oil</div>
-          <div>${checklist.items.water ? '✅' : '❌'} Coolant/Water</div><div>${checklist.items.brakes ? '✅' : '❌'} Brakes</div>
-          <div>${checklist.items.lights ? '✅' : '❌'} Lights</div><div>${checklist.items.wipers ? '✅' : '❌'} Wipers</div>
-          <div>${checklist.items.battery ? '✅' : '❌'} Battery</div><div>${checklist.items.mirrors ? '✅' : '❌'} Mirrors</div>
-          <div>${checklist.items.belts ? '✅' : '❌'} Drive Belts</div><div>${checklist.items.fuel ? '✅' : '❌'} Fuel Level</div>
-          <div>${checklist.items.other ? '✅' : '❌'} other</div>
+          <div>${checklist.items.tires ? '✔️' : '❌'} Tires</div><div>${checklist.items.oil ? '✔️' : '❌'} Engine Oil</div>
+          <div>${checklist.items.water ? '✔️' : '❌'} Coolant/Water</div><div>${checklist.items.brakes ? '✔️' : '❌'} Brakes</div>
+          <div>${checklist.items.lights ? '✔️' : '❌'} Lights</div><div>${checklist.items.wipers ? '✔️' : '❌'} Wipers</div>
+          <div>${checklist.items.battery ? '✔️' : '❌'} Battery</div><div>${checklist.items.mirrors ? '✔️' : '❌'} Mirrors</div>
+          <div>${checklist.items.belts ? '✔️' : '❌'} Drive Belts</div><div>${checklist.items.fuel ? '✔️' : '❌'} Fuel Level</div>
+          <div>${checklist.items.other ? '✔️' : '❌'} other</div>
         </div>
       </div>
       ${checklist.notes ? `<div class="trip-notes">📝 ${checklist.notes}</div>` : ''}
@@ -3696,7 +3696,7 @@ function exportToPDF() {
   
   // Add Checklists section (if checkbox is checked)
   if (includeChecklists && filteredChecklists.length > 0) {
-    html += '<div class="pdf-section"><h2 class="pdf-section-title">✅ Vehicle Checklists (' + filteredChecklists.length + ')</h2>';
+    html += '<div class="pdf-section"><h2 class="pdf-section-title">✔️ Vehicle Checklists (' + filteredChecklists.length + ')</h2>';
     html += '<table class="pdf-table"><thead><tr>';
     html += '<th>Date</th><th>Driver</th><th>Vehicle</th><th>KM</th><th>Tires</th><th>Oil</th><th>Water</th><th>Brakes</th><th>Lights</th><th>Wipers</th><th>Battery</th><th>Mirrors</th><th>Belts</th><th>Fuel</th><th>Notes</th><th>Modified</th>';
     html += '</tr></thead><tbody>';
