@@ -1897,7 +1897,50 @@ Driver Trip Tracker</h1>
           </div>
           <div id="tripImagesPreview" class="images-grid"></div>
         </div>
+<script>
+let tripSelectedImages = []; // store all images
 
+document.getElementById("tripImages").addEventListener("change", function (event) {
+    const files = Array.from(event.target.files);
+
+    // Add new images to the array
+    tripSelectedImages = tripSelectedImages.concat(files);
+
+    displayTripImages();
+});
+
+function displayTripImages() {
+    const previewContainer = document.getElementById("tripImagesPreview");
+    previewContainer.innerHTML = ""; // clear existing preview
+
+    tripSelectedImages.forEach((file, index) => {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+            const img = document.createElement("img");
+            img.src = e.target.result;
+            img.classList.add("preview-image");
+
+            previewContainer.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+    });
+}
+</script>
+
+<style>.images-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.preview-image {
+  width: 100%;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+</style>
         <div class="form-group"> 
           <label for="notes">Notes</label>
           <textarea id="notes" placeholder="Any additional details about the trip..."></textarea>
@@ -2308,6 +2351,18 @@ document.getElementById('fuelDate').valueAsDate = new Date();
 document.getElementById('checklistDate').valueAsDate = new Date();
 document.getElementById('incidentDate').valueAsDate = new Date();
 </script>
+
+
+
+
+
+
+
+
+
+
+
+
 <script>
 // ========== UTILITY FUNCTIONS ==========
 
