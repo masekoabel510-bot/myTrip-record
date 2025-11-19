@@ -1898,34 +1898,29 @@ Driver Trip Tracker</h1>
           <div id="tripImagesPreview" class="images-grid"></div>
         </div>
 <script>
-let tripSelectedImages = []; // store all images
+let tripSelectedImages = []; // stores multiple photos temporarily
 
-document.getElementById("tripImages").addEventListener("change", function (event) {
+document.getElementById("tripImages").addEventListener("change", function(event) {
     const files = Array.from(event.target.files);
 
-    // Add new images to the array
-    tripSelectedImages = tripSelectedImages.concat(files);
-
-    displayTripImages();
-});
-
-function displayTripImages() {
-    const previewContainer = document.getElementById("tripImagesPreview");
-    previewContainer.innerHTML = ""; // clear existing preview
-
-    tripSelectedImages.forEach((file, index) => {
+    files.forEach(file => {
         const reader = new FileReader();
-        reader.onload = function (e) {
-            const img = document.createElement("img");
-            img.src = e.target.result;
-            img.classList.add("preview-image");
-
-            previewContainer.appendChild(img);
+        reader.onload = function(e) {
+            tripSelectedImages.push(e.target.result); // store base64 image
+            updateTripPreviewImages();
         };
         reader.readAsDataURL(file);
     });
+});
+
+function updateTripPreviewImages() {
+    const preview = document.getElementById("tripImagesPreview");
+    preview.innerHTML = tripSelectedImages
+        .map(img => `<img src="${img}" class="receipt-thumbnail">`)
+        .join("");
 }
 </script>
+
 
 <style>.images-grid {
   display: grid;
@@ -3213,9 +3208,15 @@ function renderTrips() {
       </div>
       <div class="distance-badge">🛣️ Distance Travelled: ${trip.distance.toFixed(1)} km</div>
       ${costDisplay}
-      ${trip.images && trip.images.length > 0 ? `<div style="margin-top: 15px;"><strong style="color: white;">📷 Destination Photos (${trip.images.length}):</strong><div class="images-grid">${trip.images.map(img => `<img src="${img}" class="receipt-thumbnail" onclick="viewImage('${img}')" alt="Destination">`).join('')}</div></div>` : ''}
-      ${trip.notes ? `<div class="trip-notes">📝 ${trip.notes}</div>` : ''}
-    </div>
+      ${trip.images && trip.images.length > 0 ? 
+   `<div style="margin-top: 15px;">
+      <strong style="color: white;">📷 Destination Photos (${trip.images.length}):</strong>
+      <div class="images-grid">
+         ${trip.images.map(img => `<img src="${img}" class="receipt-thumbnail" onclick="viewImage('${img}')" alt="Destination">`).join('')}
+      </div>
+    </div>` 
+: ''}
+
   `}).join('');
 }
 </script>
