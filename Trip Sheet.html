@@ -2307,7 +2307,8 @@ document.getElementById('tripDate').valueAsDate = new Date();
 document.getElementById('fuelDate').valueAsDate = new Date();
 document.getElementById('checklistDate').valueAsDate = new Date();
 document.getElementById('incidentDate').valueAsDate = new Date();
-
+</script>
+<script>
 // ========== UTILITY FUNCTIONS ==========
 
 function getCurrentTimestamp() {
@@ -2326,7 +2327,10 @@ function formatTimestamp(timestamp) {
   if (!timestamp) return '';
   return `<span class="timestamp">Last modified: ${timestamp}</span>`;
 }
+</script>
 
+
+<script>
 // ========== VEHICLE COST MANAGEMENT ==========
 
 document.getElementById('vehicleForm').addEventListener('submit', (e) => {
@@ -2418,7 +2422,14 @@ function calculateTripCost(vehicleReg, distance) {
   }
   return null;
 }
+</script>
 
+
+
+
+
+
+<script>
 // ========== AUTO FILL FUNCTIONS ==========
 
 function autoFillTripForm() {
@@ -2428,6 +2439,7 @@ function autoFillTripForm() {
     document.getElementById('startKm').value = lastTrip.endKm;
     document.getElementById('driverName').value = lastTrip.driverName;
     document.getElementById('vehicleReg').value = lastTrip.vehicleReg;
+    document.getElementById('startLocation').value = lastTrip.endLocation;
   }
 }
 
@@ -2458,7 +2470,13 @@ function autoFillIncidentForm() {
     document.getElementById('incidentVehicleReg').value = lastIncident.vehicleReg;
   }
 }
+</script>
 
+
+
+
+
+<script>
 // ========== GLOBAL FILTER ==========
 
 function applyGlobalFilter() {
@@ -2524,7 +2542,14 @@ function hasAnyActiveFilters() {
     filters.checklistSearch || filters.checklistDriver || filters.checklistVehicle ||
     filters.incidentSearch || filters.incidentDriver || filters.incidentVehicle || filters.incidentType;
 }
+</script>
 
+
+
+
+
+
+<script>
 // ========== CONFIRM DIALOG ==========
 
 function showConfirmDialog(action) {
@@ -2654,7 +2679,15 @@ function checkServiceAlerts() {
     alertsDiv.innerHTML = '';
   }
 }
+</script>
 
+
+
+
+
+
+
+<script>
 // ========== IMAGE HANDLERS ==========
 
 document.getElementById('receiptImage').addEventListener('change', function(e) {
@@ -2731,7 +2764,17 @@ window.onclick = function(event) {
   if (event.target == modal) modal.style.display = 'none';
   if (event.target == confirmDialog) closeConfirmDialog();
 }
+</script>
 
+
+
+
+
+
+
+
+
+<script>
 // ========== TRIP FORM ==========
 
 document.getElementById('tripForm').addEventListener('submit', (e) => {
@@ -2786,7 +2829,16 @@ function resetTripForm() {
   document.getElementById('tripUploadText').style.display = 'block';
   autoFillTripForm();
 }
+</script>
 
+
+
+
+
+
+
+
+<script>
 // ========== FUEL FORM ==========
 
 document.getElementById('fuelForm').addEventListener('submit', (e) => {
@@ -2834,7 +2886,15 @@ function resetFuelForm() {
   document.getElementById('imageUploadArea').classList.remove('has-image');
   autoFillFuelForm();
 }
+</script>
 
+
+
+
+
+
+
+<script>
 // ========== SERVICE FORM ==========
 
 document.getElementById('serviceForm').addEventListener('submit', (e) => {
@@ -2866,7 +2926,15 @@ document.getElementById('serviceForm').addEventListener('submit', (e) => {
   checkServiceAlerts();
   document.getElementById('serviceForm').reset();
 });
+</script>
 
+
+
+
+
+
+
+<script>
 // ========== CHECKLIST FORM ==========
 
 document.getElementById('checklistForm').addEventListener('submit', (e) => {
@@ -2913,7 +2981,17 @@ document.getElementById('checklistForm').addEventListener('submit', (e) => {
   document.querySelectorAll('#checklistForm input[type="checkbox"]').forEach(cb => cb.checked = true);
   autoFillChecklistForm();
 });
+</script>
 
+
+
+
+
+
+
+
+
+<script>
 // ========== INCIDENT FORM ==========
 
 document.getElementById('incidentForm').addEventListener('submit', (e) => {
@@ -2956,7 +3034,16 @@ function resetIncidentForm() {
   document.getElementById('incidentUploadText').style.display = 'block';
   autoFillIncidentForm();
 }
+</script>
 
+
+
+
+
+
+
+
+<script>
 // ========== CANCEL BUTTONS ==========
 
 document.getElementById('cancelBtn').addEventListener('click', () => {
@@ -2996,7 +3083,13 @@ document.getElementById('incidentCancelBtn').addEventListener('click', () => {
   document.getElementById('incidentCancelBtn').style.display = 'none';
   resetIncidentForm();
 });
+</script>
 
+
+
+
+
+<script>
 // ========== SAVE FUNCTIONS ==========
 
 function saveTrips() { localStorage.setItem('driverTrips', JSON.stringify(trips)); }
@@ -3004,7 +3097,15 @@ function saveFuel() { localStorage.setItem('fuelEntries', JSON.stringify(fuelEnt
 function saveServiceReminders() { localStorage.setItem('serviceReminders', JSON.stringify(serviceReminders)); }
 function saveChecklists() { localStorage.setItem('vehicleChecklists', JSON.stringify(checklists)); }
 function saveIncidents() { localStorage.setItem('incidents', JSON.stringify(incidents)); }
+</script>
 
+
+
+
+
+
+
+<script>
 // ========== RENDER FUNCTIONS ==========
 
 function renderTrips() {
@@ -3062,7 +3163,17 @@ function renderTrips() {
     </div>
   `}).join('');
 }
+</script>
 
+
+
+
+
+
+
+
+<script>
+// ========== RENDER FUNCTIONS ==========
 function renderFuel() {
   const fuelList = document.getElementById('fuelList');
   const searchTerm = document.getElementById('fuelSearchInput').value.toLowerCase();
@@ -3106,7 +3217,15 @@ function renderFuel() {
     </div>
   `).join('');
 }
+</script>
 
+
+
+
+
+
+<script>
+// ========== RENDER FUNCTIONS ==========
 function renderServiceReminders() {
   const serviceList = document.getElementById('serviceList');
   if (serviceReminders.length === 0) {
@@ -3141,7 +3260,16 @@ function renderServiceReminders() {
     </div>
   `}).join('');
 }
+</script>
 
+
+
+
+
+
+
+<script>
+// ========== RENDER FUNCTIONS ==========
 function renderChecklists() {
   const checklistList = document.getElementById('checklistList');
   const searchTerm = document.getElementById('checklistSearchInput').value.toLowerCase();
@@ -3182,11 +3310,16 @@ function renderChecklists() {
       </div>
       <div style="margin-top: 15px;"><strong style="color: white;">Checklist Results:</strong>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px; margin-top: 10px; color: white;">
-          <div>${checklist.items.tires ? '✔️' : '❌'} Tires</div><div>${checklist.items.oil ? '✔️' : '❌'} Engine Oil</div>
-          <div>${checklist.items.water ? '✔️' : '❌'} Coolant/Water</div><div>${checklist.items.brakes ? '✔️' : '❌'} Brakes</div>
-          <div>${checklist.items.lights ? '✔️' : '❌'} Lights</div><div>${checklist.items.wipers ? '✔️' : '❌'} Wipers</div>
-          <div>${checklist.items.battery ? '✔️' : '❌'} Battery</div><div>${checklist.items.mirrors ? '✔️' : '❌'} Mirrors</div>
-          <div>${checklist.items.belts ? '✔️' : '❌'} Drive Belts</div><div>${checklist.items.fuel ? '✔️' : '❌'} Fuel Level</div>
+          <div>${checklist.items.tires ? '✔️' : '❌'} Tires</div>
+          <div>${checklist.items.oil ? '✔️' : '❌'} Engine Oil</div>
+          <div>${checklist.items.water ? '✔️' : '❌'} Coolant/Water</div>
+          <div>${checklist.items.brakes ? '✔️' : '❌'} Brakes</div>
+          <div>${checklist.items.lights ? '✔️' : '❌'} Lights</div>
+          <div>${checklist.items.wipers ? '✔️' : '❌'} Wipers</div>
+          <div>${checklist.items.battery ? '✔️' : '❌'} Battery</div>
+          <div>${checklist.items.mirrors ? '✔️' : '❌'} Mirrors</div>
+          <div>${checklist.items.belts ? '✔️' : '❌'} Drive Belts</div>
+          <div>${checklist.items.fuel ? '✔️' : '❌'} Fuel Level</div>
           <div>${checklist.items.other ? '✔️' : '❌'} other</div>
         </div>
       </div>
@@ -3194,7 +3327,17 @@ function renderChecklists() {
     </div>
   `}).join('');
 }
+</script>
 
+
+
+
+
+
+
+
+<script>
+// ========== RENDER FUNCTIONS ==========
 function renderIncidents() {
   const incidentList = document.getElementById('incidentList');
   const searchTerm = document.getElementById('incidentSearchInput').value.toLowerCase();
@@ -3236,7 +3379,16 @@ function renderIncidents() {
     </div>
   `).join('');
 }
+</script>
 
+
+
+
+
+
+
+
+<script>
 // ========== EDIT/DELETE FUNCTIONS ==========
 
 function editTrip(id) {
@@ -3352,7 +3504,17 @@ function deleteIncident(id) {
   renderIncidents();
   showToast('🗑️ Incident report deleted');
 }
+</script>
 
+
+
+
+
+
+
+
+
+<script>
 // ========== STATISTICS ==========
 
 function updateStatistics() {
@@ -3377,7 +3539,14 @@ function updateStatistics() {
   document.getElementById('totalFuelCost').textContent = 'R' + totalFuelCost.toFixed(2);
   document.getElementById('totalTripCost').textContent = 'R' + totalTripCost.toFixed(2);
 }
+</script>
 
+
+
+
+
+
+<script>
 // ========== EXPORT TO PDF ==========
 
 function exportToPDF() {
@@ -3715,7 +3884,13 @@ function exportToPDF() {
   exportDiv.innerHTML = html;
   setTimeout(() => window.print(), 100);
 }
+</script>
 
+
+
+
+
+<script>
 // ========== UTILITY FUNCTIONS ==========
 
 function escapeHtml(text) {
