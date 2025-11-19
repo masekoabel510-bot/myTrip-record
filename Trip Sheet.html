@@ -1,3 +1,10 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Driver Trip Tracker with Cost Calculator</title>
+<link href__="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <style>
 /* ===== Reset & Global ===== */
 * {
@@ -33,12 +40,12 @@ body {
 /* ===== Scrollbar Hidden but Scroll Enabled ===== */
 body {
   overflow-y: auto;
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 body::-webkit-scrollbar {
-  display: none; /* Chrome, Safari */
+  display: none;
 }
 
 /* ===== Container ===== */
@@ -69,6 +76,73 @@ body::-webkit-scrollbar {
   font-size: clamp(0.9rem, 3vw, 1.1rem);
   opacity: 0.9;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== Timestamp Style ===== */
+.timestamp {
+  font-size: 0.7rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-style: italic;
+  margin-top: 8px;
+  display: block;
+}
+
+/* ===== PDF Export Options ===== */
+.pdf-export-options {
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 3px;
+  padding: 20px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+  margin-bottom: 20px;
+}
+
+.pdf-export-options h3 {
+  color: white;
+  margin-bottom: 15px;
+  font-size: clamp(1rem, 3vw, 1.2rem);
+  font-weight: 600;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+}
+
+.pdf-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+.pdf-option-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.pdf-option-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.pdf-option-item input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: rgba(102, 126, 234, 0.8);
+}
+
+.pdf-option-item label {
+  cursor: pointer;
+  color: white;
+  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  flex: 1;
 }
 
 /* ===== Glass Effect Section ===== */
@@ -584,6 +658,21 @@ body::-webkit-scrollbar {
   box-shadow: 0 4px 15px rgba(0,0,0,0.15);
 }
 
+.cost-badge {
+  display: inline-block;
+  background: rgba(40, 167, 69, 0.3);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  padding: 10px 18px;
+  border-radius: 3px;
+  font-weight: bold;
+  margin-top: 12px;
+  margin-left: 10px;
+  font-size: clamp(0.85rem, 2.5vw, 0.95rem);
+  box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+}
+
 /* ===== Service Alerts ===== */
 .service-alert {
   background: rgba(255, 243, 205, 0.15);
@@ -754,6 +843,43 @@ body::-webkit-scrollbar {
   justify-content: center;
 }
 
+/* ===== Vehicle List ===== */
+.vehicle-list {
+  display: grid;
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.vehicle-item {
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 15px;
+  border-radius: 3px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.vehicle-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.vehicle-reg {
+  font-size: 1.1rem;
+  font-weight: bold;
+  color: #a5b4fc;
+  margin-bottom: 5px;
+}
+
+.vehicle-cost {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 0.95rem;
+}
+
 /* ===== Modal ===== */
 .modal {
   display: none;
@@ -911,22 +1037,26 @@ body::-webkit-scrollbar {
 }
 
 .tab-btn {
-  padding: 14px 18px;
+  padding: clamp(8px, 1.5vw, 12px) clamp(12px, 2vw, 18px);
   background: rgba(255, 255, 255, 0.05);
   backdrop-filter: blur(10px);
   border: 1px solid rgba(255, 255, 255, 0.1);
   cursor: pointer;
-  font-size: clamp(0.8rem, 2.5vw, 0.95rem);
+
+  font-size: clamp(0.75rem, 2.2vw, 1rem);
+
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
+
   transition: all 0.3s;
-  border-radius: 3px;
-  white-space: nowrap;
-  flex-shrink: 0;
+  border-radius: 6px;
+
+  white-space: normal;
+  flex: 1 1 auto;
+
   touch-action: manipulation;
-  width: 19%;
- 
 }
+
 
 .tab-btn.active {
   background: rgba(102, 126, 234, 0.2);
@@ -1001,8 +1131,8 @@ body::-webkit-scrollbar {
 
 .pdf-page {
   background: white;
-  padding: 40px;
-  max-width: 1000px;
+  padding: 30px;
+  max-width: 100%;
   margin: 0 auto;
   font-family: Arial, sans-serif;
   color: #000 !important;
@@ -1010,49 +1140,102 @@ body::-webkit-scrollbar {
 
 .pdf-title {
   text-align: center;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: bold;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   color: #333 !important;
   border-bottom: 4px solid #667eea;
-  padding-bottom: 15px;
+  padding-bottom: 12px;
+}
+
+.pdf-summary-box {
+  background: #f0f4ff;
+  border: 2px solid #667eea;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  page-break-inside: avoid;
+}
+
+.pdf-summary-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  background: white;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.pdf-summary-label {
+  font-weight: bold;
+  color: #555 !important;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.pdf-summary-value {
+  font-size: 16px;
+  font-weight: bold;
+  color: #667eea !important;
+  display: block;
+  margin-top: 4px;
 }
 
 .pdf-section {
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   page-break-inside: avoid;
 }
 
 .pdf-section-title {
-  font-size: 22px;
+  font-size: 18px;
   font-weight: bold;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
   color: #667eea !important;
   border-left: 5px solid #667eea;
-  padding-left: 15px;
+  padding-left: 12px;
   background: #f0f4ff;
-  padding: 12px 15px;
+  padding: 10px 12px;
   border-radius: 3px;
+  page-break-after: avoid;
 }
 
 .pdf-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 25px;
-  font-size: 11px;
+  margin-bottom: 20px;
+  font-size: 10px;
+  page-break-inside: auto;
+}
+
+.pdf-table thead {
+  display: table-header-group;
+}
+
+.pdf-table tr {
+  page-break-inside: avoid;
+  page-break-after: auto;
 }
 
 .pdf-table th {
   background: #667eea;
   color: white !important;
-  padding: 12px 10px;
+  padding: 10px 8px;
   text-align: left;
   font-weight: bold;
   border: 1px solid #ccc;
 }
 
 .pdf-table td {
-  padding: 10px;
+  padding: 8px;
   border: 1px solid #ccc;
   vertical-align: top;
   color: #333 !important;
@@ -1065,67 +1248,141 @@ body::-webkit-scrollbar {
 .pdf-gallery {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 15px;
-  margin: 20px 0;
+  gap: 12px;
+  margin: 15px 0;
   page-break-inside: avoid;
 }
 
 .pdf-gallery img {
   width: 100%;
-  height: 180px;
+  height: 150px;
   object-fit: cover;
   border: 2px solid #ccc;
   border-radius: 3px;
 }
 
 .pdf-trip-detail {
-  margin-bottom: 30px;
-  padding: 20px;
+  margin-bottom: 20px;
+  padding: 15px;
   border: 2px solid #e0e0e0;
-  border-radius: 10px;
+  border-radius: 8px;
   page-break-inside: avoid;
   background: #fafafa;
 }
 
 .pdf-trip-header {
-  font-size: 16px;
+  font-size: 14px;
   font-weight: bold;
   color: #667eea !important;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
   border-bottom: 2px solid #667eea;
+  page-break-after: avoid;
 }
 
 .pdf-trip-info {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  font-size: 12px;
-  margin-bottom: 15px;
+  gap: 10px;
+  font-size: 11px;
+  margin-bottom: 12px;
 }
 
 .pdf-trip-info-item {
-  padding: 8px;
+  padding: 6px;
   color: #333 !important;
 }
 
 .pdf-trip-info-label {
   font-weight: bold;
   color: #555 !important;
-  display: inline-block;
-  min-width: 90px;
+  display: block;
+  margin-bottom: 3px;
+}
+
+.pdf-trip-info-value {
+  color: #333 !important;
+  display: block;
+}
+
+.pdf-timestamp {
+  font-size: 8px;
+  color: #999 !important;
+  font-style: italic;
+  margin-top: 3px;
+  display: block;
+}
+
+.pdf-vehicle-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  font-size: 11px;
+}
+
+.pdf-vehicle-table th {
+  background: #667eea;
+  color: white !important;
+  padding: 10px;
+  text-align: left;
+  font-weight: bold;
+  border: 1px solid #ccc;
+}
+
+.pdf-vehicle-table td {
+  padding: 10px;
+  border: 1px solid #ccc;
+  color: #333 !important;
+}
+
+.pdf-vehicle-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.tab-btn .icon4 {
+  width: 50px;
+  height: 50px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.tab-btn .icon2 {
+  width: 50px;
+  height: 40px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.tab-btn .icon1 {
+  width: 35px;
+  height: 40px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+.tab-btn .icon {
+  width: 50px;
+  height: 25px;
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 /* ===== PRINT MEDIA ===== */
 @media print {
   @page { 
-    margin: 0.75in; 
-    size: A4 landscape; 
+    margin: 0.5in; 
+    size: A4 portrait;
+  }
+  
+  html, body {
+    height: auto;
+    overflow: visible;
   }
   
   body {
     background: white !important;
     padding: 0 !important;
+    display: block !important;
   }
   
   body::before {
@@ -1136,7 +1393,7 @@ body::-webkit-scrollbar {
     display: block !important;
   }
   
-  .container, .header, .card, .modal, .global-filter, .stats-grid, #serviceAlerts {
+  .container, .header, .card, .modal, .global-filter, .stats-grid, #serviceAlerts, .pdf-export-options {
     display: none !important;
   }
   
@@ -1144,38 +1401,88 @@ body::-webkit-scrollbar {
     background: white !important;
     color: #000 !important;
     padding: 0 !important;
-    margin: 0 auto !important;
+    margin: 0 !important;
     max-width: 100% !important;
+    width: 100% !important;
   }
   
   .pdf-page * {
     color: #333 !important;
+    box-sizing: border-box;
   }
   
   .pdf-title {
     color: #000 !important;
+    page-break-after: avoid;
   }
   
   .pdf-section-title {
     color: #667eea !important;
+    page-break-after: avoid;
   }
   
-  .pdf-table {
-    width: 100% !important;
+  .pdf-summary-box {
+    background: #f0f4ff !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    page-break-inside: avoid;
   }
   
-  .pdf-table th {
-    color: white !important;
+  .pdf-summary-item {
+    background: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
   }
   
-  .pdf-table td {
+  .pdf-summary-label {
+    color: #555 !important;
+  }
+  
+  .pdf-summary-value {
+    color: #667eea !important;
+  }
+  
+  .pdf-table, .pdf-vehicle-table {
+    width: 100% !important;
+    page-break-inside: auto;
+  }
+  
+  .pdf-table thead, .pdf-vehicle-table thead {
+    display: table-header-group;
+  }
+  
+  .pdf-table tr, .pdf-vehicle-table tr {
+    page-break-inside: avoid;
+    page-break-after: auto;
+  }
+  
+  .pdf-table th, .pdf-vehicle-table th {
+    color: white !important;
+    background: #667eea !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  
+  .pdf-table td, .pdf-vehicle-table td {
     color: #000 !important;
+  }
+  
+  .pdf-table tr:nth-child(even), .pdf-vehicle-table tr:nth-child(even) {
+    background: #f9f9f9 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
   
   .pdf-trip-header {
     color: #667eea !important;
+    page-break-after: avoid;
+  }
+  
+  .pdf-trip-detail {
+    page-break-inside: avoid;
+    background: #fafafa !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
   }
   
   .pdf-trip-info {
@@ -1190,9 +1497,20 @@ body::-webkit-scrollbar {
     color: #555 !important;
   }
   
-  .pdf-trip-detail {
-    width: 100% !important;
-    box-sizing: border-box !important;
+  .pdf-trip-info-value {
+    color: #333 !important;
+  }
+  
+  .pdf-timestamp {
+    color: #999 !important;
+  }
+  
+  .pdf-gallery {
+    page-break-inside: avoid;
+  }
+  
+  .pdf-section {
+    page-break-inside: avoid;
   }
 }
 
@@ -1242,6 +1560,14 @@ body::-webkit-scrollbar {
   .card { 
     padding: 18px 12px;
     background: rgba(255, 255, 255, 0.15);
+  }
+  
+  .pdf-export-options {
+    padding: 15px;
+  }
+  
+  .pdf-options-grid {
+    grid-template-columns: 1fr;
   }
   
   .form-grid { 
@@ -1410,11 +1736,11 @@ Driver Trip Tracker</h1>
     <p>All data saved in this app will exist forever in your current device only until you delete it</p>
   </div>
 
-
+  
 
   <div class="global-filter">
-  <h3><img src="https://i2.wp.com/cdn0.iconfinder.com/data/icons/small-n-flat/24/678120-calendar-clock-512.png" 
-     alt="Car Icon" 
+    <h3><img src="https://i2.wp.com/cdn0.iconfinder.com/data/icons/small-n-flat/24/678120-calendar-clock-512.png" 
+     alt="Calendar Icon" 
      width="30"> Filter All Data by Date Range</h3>
     <div class="global-filter-controls">
       <input type="date" id="globalStartDate">
@@ -1445,6 +1771,11 @@ Driver Trip Tracker</h1>
       <div class="value" id="totalFuelCost">R0</div>
       <div class="label">Fuel Cost</div>
     </div>
+    <div class="stat-card">
+      <div class="icon"></div>
+      <div class="value" id="totalTripCost">R0</div>
+      <div class="label">Trip Cost</div>
+    </div>
   </div>
 
   <div id="serviceAlerts"></div>
@@ -1452,80 +1783,69 @@ Driver Trip Tracker</h1>
   <div class="card">
     <div class="tab-nav">
       <button class="tab-btn active" onclick="switchTab('trips')">
-  <img src="https://www.pngkey.com/png/full/60-601527_top-car-view-png-free-icons-and-backgrounds.png" 
-       alt="Car Icon" 
-       class="icon">
-  Trips
-</button>
-<style>.tab-btn .icon {
-  width: 50px;   /* adjust size here */
-  height: 25px;
-  margin-right: 6px;
-  vertical-align: middle;
-
-}
-</style>
-      <button class="tab-btn active" onclick="switchTab('fuel')">
-  <img src="https://cdn-icons-png.flaticon.com/512/4514/4514864.png" 
-       alt="Car Icon" 
-       class="icon1">
-  Fuel log
-</button>
-<style>.tab-btn .icon1 {
-  width: 35px;   /* adjust size here */
-  height: 40px;
-  margin-right: 6px;
-  vertical-align: middle;
-
-}
-</style>
-       <button class="tab-btn active" onclick="switchTab('service')">
-  <img src="https://png.pngtree.com/png-vector/20220428/ourmid/pngtree-vector-illustration-of-a-semiflat-colored-car-repair-vector-png-image_30151204.png" 
-       alt="Car Icon" 
-       class="icon2">
-  Service
-</button>
-<style>.tab-btn .icon2 {
-  width: 50px;   /* adjust size here */
-  height: 40px;
-  margin-right: 6px;
-  vertical-align: middle;
-
-}
-</style>
-
-       <button class="tab-btn active" onclick="switchTab('checklist')">
-  <img src="https://static.vecteezy.com/system/resources/thumbnails/026/593/215/small/3d-white-clipboard-icon-task-management-todo-check-list-on-turquose-plane-background-work-project-plan-concept-isolated-transparent-posting-plan-productivity-checklist-png.png" 
-       alt="Car Icon" 
-       class="icon2">
-  Checklist
-</button>
-<style>.tab-btn .icon2 {
-  width: 50px;   /* adjust size here */
-  height: 40px;
-  margin-right: 6px;
-  vertical-align: middle;
-
-}
-</style>
-         <button class="tab-btn active" onclick="switchTab('incidents')">
-  <img src="https://cdn-icons-png.flaticon.com/256/7910/7910777.png" 
-       alt="Car Icon" 
-       class="icon4">
-  Incident
-</button>
-<style>.tab-btn .icon4 {
-  width: 50px;   /* adjust size here */
-  height: 50px;
-  margin-right: 6px;
-  vertical-align: middle;
-
-}
-</style>
+        <img src="https://www.pngkey.com/png/full/60-601527_top-car-view-png-free-icons-and-backgrounds.png" 
+             alt="Car Icon" 
+             class="icon">
+        Trips
+      </button>
+      <button class="tab-btn" onclick="switchTab('vehicles')">
+        Register Vehicles
+      </button>
+      <button class="tab-btn" onclick="switchTab('fuel')">
+        <img src="https://cdn-icons-png.flaticon.com/512/4514/4514864.png" 
+             alt="Fuel Icon" 
+             class="icon1">
+        Fuel log
+      </button>
+      <button class="tab-btn" onclick="switchTab('service')">
+        <img src="https://png.pngtree.com/png-vector/20220428/ourmid/pngtree-vector-illustration-of-a-semiflat-colored-car-repair-vector-png-image_30151204.png" 
+             alt="Service Icon" 
+             class="icon2">
+        Service
+      </button>
+      <button class="tab-btn" onclick="switchTab('checklist')">
+        <img src="https://static.vecteezy.com/system/resources/thumbnails/026/593/215/small/3d-white-clipboard-icon-task-management-todo-check-list-on-turquose-plane-background-work-project-plan-concept-isolated-transparent-posting-plan-productivity-checklist-png.png" 
+             alt="Checklist Icon" 
+             class="icon2">
+        Checklist
+      </button>
+      <button class="tab-btn" onclick="switchTab('incidents')">
+        <img src="https://cdn-icons-png.flaticon.com/256/7910/7910777.png" 
+             alt="Incident Icon" 
+             class="icon4">
+        Incident
+      </button>
     </div>
 
+    <!-- VEHICLES TAB -->
+    <div id="vehiclesTab" class="tab-content">
+      <h2>🚙 Vehicle Cost Settings</h2>
+      <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Set the cost per kilometer for each vehicle to automatically calculate trip costs.</p>
+      
+      <form id="vehicleForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="vehicleCostReg">Vehicle Registration *</label>
+            <input type="text" id="vehicleCostReg" placeholder="e.g., ABC-123-GP" required>
+          </div>
+          <div class="form-group">
+            <label for="costPerKm">Cost per KM (R) *</label>
+            <input type="number" id="costPerKm" placeholder="0.00" step="0.01" min="0" required>
+          </div>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          <span id="vehicleSubmitBtnText">💾 Save Vehicle Cost</span>
+        </button>
+        <button type="button" class="btn btn-secondary" id="vehicleCancelBtn" style="display: none;">Cancel</button>
+      </form>
+
+      <h2 style="margin-top: 40px;">🚗 Registered Vehicles</h2>
+      <div class="vehicle-list" id="vehicleList"></div>
+    </div>
+
+    <!-- TRIPS TAB -->
     <div id="tripsTab" class="tab-content active">
-      <h2> Add New Trip</h2>
+      <h2>🚗 Add New Trip</h2>
       <form id="tripForm">
         <div class="form-grid">
           <div class="form-group">
@@ -1586,7 +1906,51 @@ Driver Trip Tracker</h1>
           <span id="submitBtnText">Add Trip</span>
         </button>
         <button type="button" class="btn btn-secondary" id="cancelBtn" style="display: none;">Cancel</button>
-      </form>
+      </form> 
+      <br>
+
+
+<div class="pdf-export-options">
+    <h3>📄 PDF Export Options - Select Sections to Include</h3>
+
+    <div class="pdf-options-grid">
+
+        <label class="pdf-option-item">
+            <input type="checkbox" id="pdfIncludeVehicles" checked>
+            <span>Cost</span>
+        </label>
+
+        <label class="pdf-option-item">
+            <input type="checkbox" id="pdfIncludeTrips" checked>
+            <span>Trips</span>
+        </label>
+
+        <label class="pdf-option-item">
+            <input type="checkbox" id="pdfIncludeFuel" checked>
+            <span>Fuel</span>
+        </label>
+
+        <label class="pdf-option-item">
+            <input type="checkbox" id="pdfIncludeChecklists" checked>
+            <span>Checklists</span>
+        </label>
+
+        <label class="pdf-option-item">
+            <input type="checkbox" id="pdfIncludeIncidents" checked>
+            <span>Incidents</span>
+        </label>
+
+    </div>
+
+    <p style="color: rgba(255,255,255,0.7); font-size: 0.85rem; margin-top: 10px;">
+        💡 Uncheck sections you don't want in your PDF export
+    </p>
+</div>
+
+
+
+
+
 
       <h2 style="margin-top: 40px;">📋 Trip History</h2>
       <div class="filter-bar">
@@ -1600,6 +1964,7 @@ Driver Trip Tracker</h1>
       <div class="trips-list" id="tripsList"></div>
     </div>
 
+    <!-- FUEL TAB -->
     <div id="fuelTab" class="tab-content">
       <h2>⛽ Add Fuel Refill</h2>
       <form id="fuelForm">
@@ -1672,6 +2037,7 @@ Driver Trip Tracker</h1>
       <div class="trips-list" id="fuelList"></div>
     </div>
 
+    <!-- SERVICE TAB -->
     <div id="serviceTab" class="tab-content">
       <h2>🔧 Set Service Reminder</h2>
       <form id="serviceForm">
@@ -1715,6 +2081,7 @@ Driver Trip Tracker</h1>
       <div class="trips-list" id="serviceList"></div>
     </div>
 
+    <!-- CHECKLIST TAB -->
     <div id="checklistTab" class="tab-content">
       <h2>✅ Vehicle Inspection Checklist</h2>
       <form id="checklistForm">
@@ -1779,13 +2146,17 @@ Driver Trip Tracker</h1>
             <input type="checkbox" id="check_fuel" checked>
             <label for="check_fuel">⛽ Fuel Level</label>
           </div>
+          <div class="checklist-item-line">
+            <input type="checkbox" id="other" checked>
+            <label for="check_other">⚠️ other</label>
+          </div>
         </div>
 
         <div class="form-group" style="margin-top: 20px;">
           <label for="checklistNotes">Additional Notes / Issues Found</label>
           <textarea id="checklistNotes" placeholder="Note any issues or concerns..."></textarea>
         </div>
-<br>
+        <br>
         <button type="submit" class="btn btn-primary">
           <span id="checklistSubmitBtnText">Save Checklist</span>
         </button>
@@ -1803,6 +2174,7 @@ Driver Trip Tracker</h1>
       <div class="trips-list" id="checklistList"></div>
     </div>
 
+    <!-- INCIDENTS TAB -->
     <div id="incidentsTab" class="tab-content">
       <h2>⚠️ Report Incident</h2>
       <form id="incidentForm">
@@ -1881,6 +2253,7 @@ Driver Trip Tracker</h1>
           <option value="Mechanical Issue">Mechanical Issue</option>
           <option value="Other">Other</option>
         </select>
+        
         <button class="btn btn-small export-btn" onclick="exportToPDF()">📥 Download PDF</button>
         <button class="btn btn-small btn-delete" onclick="showConfirmDialog('clearAllIncidents')">🗑️ Clear All</button>
       </div>
@@ -1916,11 +2289,13 @@ let fuelEntries = JSON.parse(localStorage.getItem('fuelEntries')) || [];
 let serviceReminders = JSON.parse(localStorage.getItem('serviceReminders')) || [];
 let checklists = JSON.parse(localStorage.getItem('vehicleChecklists')) || [];
 let incidents = JSON.parse(localStorage.getItem('incidents')) || [];
+let vehicleCosts = JSON.parse(localStorage.getItem('vehicleCosts')) || {};
 let editingTripId = null;
 let editingFuelId = null;
 let editingServiceId = null;
 let editingChecklistId = null;
 let editingIncidentId = null;
+let editingVehicleReg = null;
 let currentReceiptImage = null;
 let currentIncidentImages = [];
 let currentTripImages = [];
@@ -1932,6 +2307,119 @@ document.getElementById('tripDate').valueAsDate = new Date();
 document.getElementById('fuelDate').valueAsDate = new Date();
 document.getElementById('checklistDate').valueAsDate = new Date();
 document.getElementById('incidentDate').valueAsDate = new Date();
+
+// ========== UTILITY FUNCTIONS ==========
+
+function getCurrentTimestamp() {
+  const now = new Date();
+  return now.toLocaleString('en-US', { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric', 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: true 
+  });
+}
+
+function formatTimestamp(timestamp) {
+  if (!timestamp) return '';
+  return `<span class="timestamp">Last modified: ${timestamp}</span>`;
+}
+
+// ========== VEHICLE COST MANAGEMENT ==========
+
+document.getElementById('vehicleForm').addEventListener('submit', (e) => {
+  e.preventDefault();
+  const vehicleReg = document.getElementById('vehicleCostReg').value.toUpperCase();
+  const costPerKm = parseFloat(document.getElementById('costPerKm').value) || 0;
+  
+  vehicleCosts[vehicleReg] = {
+    cost: costPerKm,
+    timestamp: getCurrentTimestamp()
+  };
+  saveVehicleCosts();
+  renderVehicleList();
+  renderTrips();
+  updateStatistics();
+  
+  document.getElementById('vehicleForm').reset();
+  editingVehicleReg = null;
+  document.getElementById('vehicleSubmitBtnText').textContent = '💾 Save Vehicle Cost';
+  document.getElementById('vehicleCancelBtn').style.display = 'none';
+  
+  showToast('✅ Vehicle cost saved successfully!');
+});
+
+document.getElementById('vehicleCancelBtn').addEventListener('click', () => {
+  editingVehicleReg = null;
+  document.getElementById('vehicleForm').reset();
+  document.getElementById('vehicleSubmitBtnText').textContent = '💾 Save Vehicle Cost';
+  document.getElementById('vehicleCancelBtn').style.display = 'none';
+});
+
+function renderVehicleList() {
+  const vehicleList = document.getElementById('vehicleList');
+  const vehicles = Object.keys(vehicleCosts);
+  
+  if (vehicles.length === 0) {
+    vehicleList.innerHTML = `<div class="no-trips"><div class="icon">🚗</div><h3>No vehicles registered</h3><p>Add your first vehicle cost above!</p></div>`;
+    return;
+  }
+  
+  vehicleList.innerHTML = vehicles.map(reg => {
+    const data = typeof vehicleCosts[reg] === 'object' ? vehicleCosts[reg] : { cost: vehicleCosts[reg], timestamp: null };
+    return `
+    <div class="vehicle-item">
+      <div class="vehicle-info">
+        <div class="vehicle-reg">${reg}</div>
+        <div class="vehicle-cost">💵 R${data.cost.toFixed(2)} per km</div>
+        ${formatTimestamp(data.timestamp)}
+      </div>
+      <div class="trip-actions">
+        <button class="btn btn-small btn-edit" onclick="editVehicleCost('${reg}')">✏️ Edit</button>
+        <button class="btn btn-small btn-delete" onclick="deleteVehicleCost('${reg}')">🗑️ Delete</button>
+      </div>
+    </div>
+  `}).join('');
+}
+
+function editVehicleCost(vehicleReg) {
+  editingVehicleReg = vehicleReg;
+  const data = typeof vehicleCosts[vehicleReg] === 'object' ? vehicleCosts[vehicleReg] : { cost: vehicleCosts[vehicleReg] };
+  document.getElementById('vehicleCostReg').value = vehicleReg;
+  document.getElementById('costPerKm').value = data.cost;
+  document.getElementById('vehicleSubmitBtnText').textContent = '💾 Update Vehicle Cost';
+  document.getElementById('vehicleCancelBtn').style.display = 'inline-block';
+  switchTab('vehicles');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function deleteVehicleCost(vehicleReg) {
+  delete vehicleCosts[vehicleReg];
+  saveVehicleCosts();
+  renderVehicleList();
+  renderTrips();
+  updateStatistics();
+  showToast('🗑️ Vehicle cost deleted');
+}
+
+function saveVehicleCosts() {
+  localStorage.setItem('vehicleCosts', JSON.stringify(vehicleCosts));
+}
+
+function calculateTripCost(vehicleReg, distance) {
+  const vehicleData = vehicleCosts[vehicleReg];
+  if (vehicleData) {
+    const costPerKm = typeof vehicleData === 'object' ? vehicleData.cost : vehicleData;
+    if (costPerKm !== undefined && costPerKm > 0) {
+      return distance * costPerKm;
+    }
+  }
+  return null;
+}
+
+// ========== AUTO FILL FUNCTIONS ==========
 
 function autoFillTripForm() {
   if (trips.length > 0 && !editingTripId) {
@@ -1970,6 +2458,8 @@ function autoFillIncidentForm() {
     document.getElementById('incidentVehicleReg').value = lastIncident.vehicleReg;
   }
 }
+
+// ========== GLOBAL FILTER ==========
 
 function applyGlobalFilter() {
   globalStartDate = document.getElementById('globalStartDate').value;
@@ -2035,6 +2525,8 @@ function hasAnyActiveFilters() {
     filters.incidentSearch || filters.incidentDriver || filters.incidentVehicle || filters.incidentType;
 }
 
+// ========== CONFIRM DIALOG ==========
+
 function showConfirmDialog(action) {
   const messages = {
     'clearAllTrips': { title: '⚠️ Delete All Trips?', message: 'This will permanently delete ALL trips. This action cannot be undone!' },
@@ -2043,6 +2535,7 @@ function showConfirmDialog(action) {
     'clearAllIncidents': { title: '⚠️ Delete All Incidents?', message: 'This will permanently delete ALL incident reports. This action cannot be undone!' },
     'exportNoFilters': { title: '📥 Filter Required for PDF Export', message: 'To protect your data, you must apply at least ONE filter before exporting.\n\nUse: Date Range, Vehicle Reg, Driver Name, Reference, Incident Type, or any Search box.' }
   };
+  
   const config = messages[action];
   if (config) {
     document.getElementById('confirmTitle').textContent = config.title;
@@ -2099,6 +2592,7 @@ window.addEventListener('load', () => {
   renderServiceReminders();
   renderChecklists();
   renderIncidents();
+  renderVehicleList();
   updateStatistics();
   checkServiceAlerts();
   autoFillTripForm();
@@ -2120,7 +2614,7 @@ function showToast(message, type = 'success') {
 function switchTab(tab) {
   document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
   document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-  const tabs = { 'trips': 0, 'fuel': 1, 'service': 2, 'checklist': 3, 'incidents': 4 };
+  const tabs = { 'trips': 0, 'vehicles': 1, 'fuel': 2, 'service': 3, 'checklist': 4, 'incidents': 5 };
   document.querySelectorAll('.tab-btn')[tabs[tab]].classList.add('active');
   document.getElementById(tab + 'Tab').classList.add('active');
   if (tab === 'trips') autoFillTripForm();
@@ -2160,6 +2654,8 @@ function checkServiceAlerts() {
     alertsDiv.innerHTML = '';
   }
 }
+
+// ========== IMAGE HANDLERS ==========
 
 document.getElementById('receiptImage').addEventListener('change', function(e) {
   const file = e.target.files[0];
@@ -2236,6 +2732,8 @@ window.onclick = function(event) {
   if (event.target == confirmDialog) closeConfirmDialog();
 }
 
+// ========== TRIP FORM ==========
+
 document.getElementById('tripForm').addEventListener('submit', (e) => {
   e.preventDefault();
   const startKm = parseFloat(document.getElementById('startKm').value) || 0;
@@ -2244,6 +2742,7 @@ document.getElementById('tripForm').addEventListener('submit', (e) => {
     showToast('⚠️ End KM must be greater than Start KM!', 'warning');
     return;
   }
+  const timestamp = getCurrentTimestamp();
   const trip = {
     id: editingTripId || Date.now(),
     date: document.getElementById('tripDate').value,
@@ -2258,7 +2757,8 @@ document.getElementById('tripForm').addEventListener('submit', (e) => {
     reference: document.getElementById('reference').value,
     notes: document.getElementById('notes').value,
     images: currentTripImages,
-    createdAt: editingTripId ? trips.find(t => t.id === editingTripId).createdAt : new Date().toISOString()
+    createdAt: editingTripId ? trips.find(t => t.id === editingTripId).createdAt : timestamp,
+    lastModified: timestamp
   };
   if (editingTripId) {
     const index = trips.findIndex(t => t.id === editingTripId);
@@ -2287,8 +2787,11 @@ function resetTripForm() {
   autoFillTripForm();
 }
 
+// ========== FUEL FORM ==========
+
 document.getElementById('fuelForm').addEventListener('submit', (e) => {
   e.preventDefault();
+  const timestamp = getCurrentTimestamp();
   const fuelEntry = {
     id: editingFuelId || Date.now(),
     date: document.getElementById('fuelDate').value,
@@ -2301,7 +2804,8 @@ document.getElementById('fuelForm').addEventListener('submit', (e) => {
     station: document.getElementById('fuelStation').value,
     notes: document.getElementById('fuelNotes').value,
     receiptImage: currentReceiptImage,
-    createdAt: editingFuelId ? fuelEntries.find(f => f.id === editingFuelId).createdAt : new Date().toISOString()
+    createdAt: editingFuelId ? fuelEntries.find(f => f.id === editingFuelId).createdAt : timestamp,
+    lastModified: timestamp
   };
   if (editingFuelId) {
     const index = fuelEntries.findIndex(f => f.id === editingFuelId);
@@ -2321,8 +2825,21 @@ document.getElementById('fuelForm').addEventListener('submit', (e) => {
   resetFuelForm();
 });
 
+function resetFuelForm() {
+  document.getElementById('fuelForm').reset();
+  document.getElementById('fuelDate').valueAsDate = new Date();
+  currentReceiptImage = null;
+  document.getElementById('imagePreview').style.display = 'none';
+  document.getElementById('uploadText').style.display = 'block';
+  document.getElementById('imageUploadArea').classList.remove('has-image');
+  autoFillFuelForm();
+}
+
+// ========== SERVICE FORM ==========
+
 document.getElementById('serviceForm').addEventListener('submit', (e) => {
   e.preventDefault();
+  const timestamp = getCurrentTimestamp();
   const service = {
     id: editingServiceId || Date.now(),
     vehicleReg: document.getElementById('serviceVehicleReg').value.toUpperCase(),
@@ -2330,7 +2847,8 @@ document.getElementById('serviceForm').addEventListener('submit', (e) => {
     nextServiceKm: parseFloat(document.getElementById('nextServiceKm').value) || 0,
     serviceType: document.getElementById('serviceType').value,
     notes: document.getElementById('serviceNotes').value,
-    createdAt: editingServiceId ? serviceReminders.find(s => s.id === editingServiceId).createdAt : new Date().toISOString()
+    createdAt: editingServiceId ? serviceReminders.find(s => s.id === editingServiceId).createdAt : timestamp,
+    lastModified: timestamp
   };
   if (editingServiceId) {
     const index = serviceReminders.findIndex(s => s.id === editingServiceId);
@@ -2349,8 +2867,11 @@ document.getElementById('serviceForm').addEventListener('submit', (e) => {
   document.getElementById('serviceForm').reset();
 });
 
+// ========== CHECKLIST FORM ==========
+
 document.getElementById('checklistForm').addEventListener('submit', (e) => {
   e.preventDefault();
+  const timestamp = getCurrentTimestamp();
   const checklist = {
     id: editingChecklistId || Date.now(),
     date: document.getElementById('checklistDate').value,
@@ -2367,10 +2888,12 @@ document.getElementById('checklistForm').addEventListener('submit', (e) => {
       battery: document.getElementById('check_battery').checked,
       mirrors: document.getElementById('check_mirrors').checked,
       belts: document.getElementById('check_belts').checked,
-      fuel: document.getElementById('check_fuel').checked
+      fuel: document.getElementById('check_fuel').checked,
+      other: document.getElementById('other').checked
     },
     notes: document.getElementById('checklistNotes').value,
-    createdAt: editingChecklistId ? checklists.find(c => c.id === editingChecklistId).createdAt : new Date().toISOString()
+    createdAt: editingChecklistId ? checklists.find(c => c.id === editingChecklistId).createdAt : timestamp,
+    lastModified: timestamp
   };
   if (editingChecklistId) {
     const index = checklists.findIndex(c => c.id === editingChecklistId);
@@ -2391,8 +2914,11 @@ document.getElementById('checklistForm').addEventListener('submit', (e) => {
   autoFillChecklistForm();
 });
 
+// ========== INCIDENT FORM ==========
+
 document.getElementById('incidentForm').addEventListener('submit', (e) => {
   e.preventDefault();
+  const timestamp = getCurrentTimestamp();
   const incident = {
     id: editingIncidentId || Date.now(),
     date: document.getElementById('incidentDate').value,
@@ -2403,7 +2929,8 @@ document.getElementById('incidentForm').addEventListener('submit', (e) => {
     type: document.getElementById('incidentType').value,
     description: document.getElementById('incidentDescription').value,
     images: currentIncidentImages,
-    createdAt: editingIncidentId ? incidents.find(i => i.id === editingIncidentId).createdAt : new Date().toISOString()
+    createdAt: editingIncidentId ? incidents.find(i => i.id === editingIncidentId).createdAt : timestamp,
+    lastModified: timestamp
   };
   if (editingIncidentId) {
     const index = incidents.findIndex(i => i.id === editingIncidentId);
@@ -2421,16 +2948,6 @@ document.getElementById('incidentForm').addEventListener('submit', (e) => {
   resetIncidentForm();
 });
 
-function resetFuelForm() {
-  document.getElementById('fuelForm').reset();
-  document.getElementById('fuelDate').valueAsDate = new Date();
-  currentReceiptImage = null;
-  document.getElementById('imagePreview').style.display = 'none';
-  document.getElementById('uploadText').style.display = 'block';
-  document.getElementById('imageUploadArea').classList.remove('has-image');
-  autoFillFuelForm();
-}
-
 function resetIncidentForm() {
   document.getElementById('incidentForm').reset();
   document.getElementById('incidentDate').valueAsDate = new Date();
@@ -2439,6 +2956,8 @@ function resetIncidentForm() {
   document.getElementById('incidentUploadText').style.display = 'block';
   autoFillIncidentForm();
 }
+
+// ========== CANCEL BUTTONS ==========
 
 document.getElementById('cancelBtn').addEventListener('click', () => {
   editingTripId = null;
@@ -2478,183 +2997,15 @@ document.getElementById('incidentCancelBtn').addEventListener('click', () => {
   resetIncidentForm();
 });
 
+// ========== SAVE FUNCTIONS ==========
+
 function saveTrips() { localStorage.setItem('driverTrips', JSON.stringify(trips)); }
 function saveFuel() { localStorage.setItem('fuelEntries', JSON.stringify(fuelEntries)); }
 function saveServiceReminders() { localStorage.setItem('serviceReminders', JSON.stringify(serviceReminders)); }
 function saveChecklists() { localStorage.setItem('vehicleChecklists', JSON.stringify(checklists)); }
 function saveIncidents() { localStorage.setItem('incidents', JSON.stringify(incidents)); }
 
-function exportToPDF() {
-  if (!hasAnyActiveFilters()) {
-    showConfirmDialog('exportNoFilters');
-    return;
-  }
-  
-  const allFilters = {
-    search: document.getElementById('searchInput').value.toLowerCase() || 
-            document.getElementById('fuelSearchInput').value.toLowerCase() ||
-            document.getElementById('checklistSearchInput').value.toLowerCase() ||
-            document.getElementById('incidentSearchInput').value.toLowerCase(),
-    vehicle: document.getElementById('filterVehicle').value.toLowerCase() || 
-             document.getElementById('fuelFilterVehicle').value.toLowerCase() ||
-             document.getElementById('checklistFilterVehicle').value.toLowerCase() ||
-             document.getElementById('incidentFilterVehicle').value.toLowerCase(),
-    driver: document.getElementById('filterDriver').value.toLowerCase() || 
-            document.getElementById('fuelFilterDriver').value.toLowerCase() ||
-            document.getElementById('checklistFilterDriver').value.toLowerCase() ||
-            document.getElementById('incidentFilterDriver').value.toLowerCase(),
-    reference: document.getElementById('filterReference').value.toLowerCase(),
-    incidentType: document.getElementById('incidentFilterType').value
-  };
-  
-  const filteredTrips = trips.filter(item => {
-    const matchesSearch = !allFilters.search || item.startLocation.toLowerCase().includes(allFilters.search) || 
-      item.endLocation.toLowerCase().includes(allFilters.search) || item.notes.toLowerCase().includes(allFilters.search) || 
-      item.reference.toLowerCase().includes(allFilters.search) || item.driverName.toLowerCase().includes(allFilters.search) || 
-      item.vehicleReg.toLowerCase().includes(allFilters.search);
-    const matchesVehicle = !allFilters.vehicle || item.vehicleReg.toLowerCase().includes(allFilters.vehicle);
-    const matchesDriver = !allFilters.driver || item.driverName.toLowerCase().includes(allFilters.driver);
-    const matchesReference = !allFilters.reference || item.reference.toLowerCase().includes(allFilters.reference);
-    const matchesDateRange = isWithinGlobalDateRange(item.date);
-    return matchesSearch && matchesVehicle && matchesDriver && matchesReference && matchesDateRange;
-  });
-  
-  const filteredFuel = fuelEntries.filter(item => {
-    const matchesSearch = !allFilters.search || item.driverName.toLowerCase().includes(allFilters.search) || 
-      item.vehicleReg.toLowerCase().includes(allFilters.search) || item.station.toLowerCase().includes(allFilters.search) || 
-      item.notes.toLowerCase().includes(allFilters.search);
-    const matchesVehicle = !allFilters.vehicle || item.vehicleReg.toLowerCase().includes(allFilters.vehicle);
-    const matchesDriver = !allFilters.driver || item.driverName.toLowerCase().includes(allFilters.driver);
-    const matchesDateRange = isWithinGlobalDateRange(item.date);
-    return matchesSearch && matchesVehicle && matchesDriver && matchesDateRange;
-  });
-  
-  const filteredChecklists = checklists.filter(item => {
-    const matchesSearch = !allFilters.search || item.driverName.toLowerCase().includes(allFilters.search) || 
-      item.vehicleReg.toLowerCase().includes(allFilters.search) || item.notes.toLowerCase().includes(allFilters.search);
-    const matchesVehicle = !allFilters.vehicle || item.vehicleReg.toLowerCase().includes(allFilters.vehicle);
-    const matchesDriver = !allFilters.driver || item.driverName.toLowerCase().includes(allFilters.driver);
-    const matchesDateRange = isWithinGlobalDateRange(item.date);
-    return matchesSearch && matchesVehicle && matchesDriver && matchesDateRange;
-  });
-  
-  const filteredIncidents = incidents.filter(item => {
-    const matchesSearch = !allFilters.search || item.driverName.toLowerCase().includes(allFilters.search) || 
-      item.vehicleReg.toLowerCase().includes(allFilters.search) || item.location.toLowerCase().includes(allFilters.search) || 
-      item.description.toLowerCase().includes(allFilters.search);
-    const matchesVehicle = !allFilters.vehicle || item.vehicleReg.toLowerCase().includes(allFilters.vehicle);
-    const matchesDriver = !allFilters.driver || item.driverName.toLowerCase().includes(allFilters.driver);
-    const matchesType = !allFilters.incidentType || item.type === allFilters.incidentType;
-    const matchesDateRange = isWithinGlobalDateRange(item.date);
-    return matchesSearch && matchesVehicle && matchesDriver && matchesType && matchesDateRange;
-  });
-  
-  if (filteredTrips.length === 0 && filteredFuel.length === 0 && filteredChecklists.length === 0 && filteredIncidents.length === 0) {
-    showToast('⚠️ No data matches your filters!', 'warning');
-    return;
-  }
-  
-  const exportDiv = document.getElementById('pdfExportContent');
-  let html = '<div class="pdf-page"><h1 class="pdf-title">🚚 Vehicle Tracker Report - ' + new Date().toLocaleDateString() + '</h1>';
-  
-  if (filteredTrips.length > 0) {
-    html += '<div class="pdf-section"><h2 class="pdf-section-title">📋 Trips (' + filteredTrips.length + ')</h2>';
-    filteredTrips.forEach(trip => {
-      html += '<div class="pdf-trip-detail">';
-      html += `<div class="pdf-trip-header">${formatDate(trip.date)} ${trip.time ? '• ' + trip.time : ''} - ${trip.vehicleReg}</div>`;
-      html += '<div class="pdf-trip-info">';
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Driver:</span> ${escapeHtml(trip.driverName)}</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">From:</span> ${escapeHtml(trip.startLocation)}</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">To:</span> ${escapeHtml(trip.endLocation)}</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Distance:</span> ${trip.distance.toFixed(1)} km</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Start KM:</span> ${trip.startKm.toFixed(1)} km</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">End KM:</span> ${trip.endKm.toFixed(1)} km</div>`;
-      if (trip.reference) html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Reference:</span> ${escapeHtml(trip.reference)}</div>`;
-      if (trip.notes) html += `<div class="pdf-trip-info-item" style="grid-column: 1 / -1;"><span class="pdf-trip-info-label">Notes:</span> ${escapeHtml(trip.notes)}</div>`;
-      html += '</div>';
-      if (trip.images && trip.images.length > 0) {
-        html += '<div style="margin-top: 15px;"><strong style="font-size: 12px; color: #333;">📷 Destination Photos:</strong></div><div class="pdf-gallery">';
-        trip.images.forEach(img => { html += `<img src="${img}" alt="Trip Photo">`; });
-        html += '</div>';
-      }
-      html += '</div>';
-    });
-    html += '</div>';
-  }
-  
-  if (filteredFuel.length > 0) {
-    html += '<div class="pdf-section"><h2 class="pdf-section-title">⛽Fuel Entries (' + filteredFuel.length + ')</h2>';
-    filteredFuel.forEach(fuel => {
-      html += '<div class="pdf-trip-detail">';
-      html += `<div class="pdf-trip-header" style="color: #28a745 !important;">${formatDate(fuel.date)} ${fuel.time ? '• ' + fuel.time : ''} - ${fuel.vehicleReg}</div>`;
-      html += '<div class="pdf-trip-info">';
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Driver:</span> ${escapeHtml(fuel.driverName)}</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">KM Reading:</span> ${fuel.kmReading.toFixed(1)} km</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Liters:</span> ${fuel.liters.toFixed(1)} L</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Cost:</span> R${fuel.cost.toFixed(2)}</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Price/L:</span> R${(fuel.cost / fuel.liters).toFixed(2)}</div>`;
-      if (fuel.station) html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Station:</span> ${escapeHtml(fuel.station)}</div>`;
-      if (fuel.notes) html += `<div class="pdf-trip-info-item" style="grid-column: 1 / -1;"><span class="pdf-trip-info-label">Notes:</span> ${escapeHtml(fuel.notes)}</div>`;
-      html += '</div>';
-      if (fuel.receiptImage) {
-        html += '<div style="margin-top: 15px;"><strong style="font-size: 12px; color: #333;">📷 Receipt:</strong></div>';
-        html += `<div style="margin-top: 10px;"><img src="${fuel.receiptImage}" style="max-width: 100%; max-height: 400px; border: 2px solid #ccc; border-radius: 6px;"></div>`;
-      }
-      html += '</div>';
-    });
-    html += '</div>';
-  }
-  
-  if (filteredIncidents.length > 0) {
-    html += '<div class="pdf-section"><h2 class="pdf-section-title">⚠️ Incidents (' + filteredIncidents.length + ')</h2>';
-    filteredIncidents.forEach(i => {
-      html += '<div class="pdf-trip-detail">';
-      html += `<div class="pdf-trip-header" style="color: #dc3545 !important;">${formatDate(i.date)} ${i.time ? '• ' + i.time : ''} - ${i.vehicleReg}</div>`;
-      html += '<div class="pdf-trip-info">';
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Driver:</span> ${escapeHtml(i.driverName)}</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Location:</span> ${escapeHtml(i.location)}</div>`;
-      html += `<div class="pdf-trip-info-item"><span class="pdf-trip-info-label">Type:</span> ${i.type}</div>`;
-      html += `<div class="pdf-trip-info-item" style="grid-column: 1 / -1;"><span class="pdf-trip-info-label">Description:</span> ${escapeHtml(i.description)}</div>`;
-      html += '</div>';
-      if (i.images && i.images.length > 0) {
-        html += '<div style="margin-top: 15px;"><strong style="font-size: 12px; color: #333;">📷 Damage Photos:</strong></div><div class="pdf-gallery">';
-        i.images.forEach(img => { html += `<img src="${img}" alt="Incident Photo">`; });
-        html += '</div>';
-      }
-      html += '</div>';
-    });
-    html += '</div>';
-  }
-  
-  if (filteredChecklists.length > 0) {
-    html += '<div class="pdf-section"><h2 class="pdf-section-title">✅ Vehicle Checklists (' + filteredChecklists.length + ')</h2>';
-    html += '<table class="pdf-table"><thead><tr>';
-    html += '<th>Date</th><th>Driver</th><th>Vehicle</th><th>KM</th><th>Tires</th><th>Oil</th><th>Water</th><th>Brakes</th><th>Lights</th><th>Wipers</th><th>Battery</th><th>Mirrors</th><th>Belts</th><th>Fuel</th><th>Notes</th>';
-    html += '</tr></thead><tbody>';
-    filteredChecklists.forEach(c => {
-      html += '<tr>';
-      html += `<td>${c.date}</td><td>${escapeHtml(c.driverName)}</td><td>${c.vehicleReg}</td><td>${c.kmReading.toFixed(1)}</td>`;
-      html += `<td>${c.items.tires ? '✓' : '✗'}</td><td>${c.items.oil ? '✓' : '✗'}</td><td>${c.items.water ? '✓' : '✗'}</td><td>${c.items.brakes ? '✓' : '✗'}</td>`;
-      html += `<td>${c.items.lights ? '✓' : '✗'}</td><td>${c.items.wipers ? '✓' : '✗'}</td><td>${c.items.battery ? '✓' : '✗'}</td><td>${c.items.mirrors ? '✓' : '✗'}</td>`;
-      html += `<td>${c.items.belts ? '✓' : '✗'}</td><td>${c.items.fuel ? '✓' : '✗'}</td><td>${escapeHtml(c.notes)}</td>`;
-      html += '</tr>';
-    });
-    html += '</tbody></table></div>';
-  }
-  
-  html += '</div>';
-  exportDiv.innerHTML = html;
-  setTimeout(() => window.print(), 100);
-  const totalRecords = filteredTrips.length + filteredFuel.length + filteredChecklists.length + filteredIncidents.length;
-  showToast('📥 PDF ready: ' + totalRecords + ' records');
-}
-
-function escapeHtml(text) {
-  if (!text) return '';
-  const div = document.createElement('div');
-  div.textContent = text;
-  return div.innerHTML;
-}
+// ========== RENDER FUNCTIONS ==========
 
 function renderTrips() {
   const tripsList = document.getElementById('tripsList');
@@ -2679,12 +3030,17 @@ function renderTrips() {
     return;
   }
   
-  tripsList.innerHTML = filteredTrips.map(trip => `
+  tripsList.innerHTML = filteredTrips.map(trip => {
+    const tripCost = calculateTripCost(trip.vehicleReg, trip.distance);
+    const costDisplay = tripCost !== null ? `<div class="cost-badge">💵 Trip Cost: R${tripCost.toFixed(2)}</div>` : 
+                        `<div class="cost-badge" style="background: rgba(255, 193, 7, 0.3);">⚠️ Set cost/km in Vehicles tab</div>`;
+    
+    return `
     <div class="trip-item">
       <div class="trip-header">
-        <div class="trip-date">    <img src="https://i2.wp.com/cdn0.iconfinder.com/data/icons/small-n-flat/24/678120-calendar-clock-512.png" 
+        <div class="trip-date"><img src="https://i2.wp.com/cdn0.iconfinder.com/data/icons/small-n-flat/24/678120-calendar-clock-512.png" 
      alt="Car Icon" 
-     width="30"> ${formatDate(trip.date)} ${trip.time ? '• ' + trip.time : ''}</div>
+     width="30"> ${formatDate(trip.date)} ${trip.time ? '• ' + trip.time : ''}${formatTimestamp(trip.lastModified)}</div>
         <div class="trip-actions">
           <button class="btn btn-small btn-edit" onclick="editTrip(${trip.id})">✏️ Edit</button>
           <button class="btn btn-small btn-delete" onclick="deleteTrip(${trip.id})">🗑️ Delete</button>
@@ -2700,10 +3056,11 @@ function renderTrips() {
         ${trip.reference ? `<div class="trip-detail"><div class="icon">📋</div><div class="content"><div class="label">Reference</div><div class="value">${trip.reference}</div></div></div>` : ''}
       </div>
       <div class="distance-badge">🛣️ Distance Travelled: ${trip.distance.toFixed(1)} km</div>
+      ${costDisplay}
       ${trip.images && trip.images.length > 0 ? `<div style="margin-top: 15px;"><strong style="color: white;">📷 Destination Photos (${trip.images.length}):</strong><div class="images-grid">${trip.images.map(img => `<img src="${img}" class="receipt-thumbnail" onclick="viewImage('${img}')" alt="Destination">`).join('')}</div></div>` : ''}
       ${trip.notes ? `<div class="trip-notes">📝 ${trip.notes}</div>` : ''}
     </div>
-  `).join('');
+  `}).join('');
 }
 
 function renderFuel() {
@@ -2729,7 +3086,7 @@ function renderFuel() {
   fuelList.innerHTML = filteredFuel.map(fuel => `
     <div class="fuel-item">
       <div class="trip-header">
-        <div class="fuel-date">⛽ ${formatDate(fuel.date)} ${fuel.time ? '• ' + fuel.time : ''}</div>
+        <div class="fuel-date">⛽ ${formatDate(fuel.date)} ${fuel.time ? '• ' + fuel.time : ''}${formatTimestamp(fuel.lastModified)}</div>
         <div class="trip-actions">
           <button class="btn btn-small btn-edit" onclick="editFuel(${fuel.id})">✏️ Edit</button>
           <button class="btn btn-small btn-delete" onclick="deleteFuel(${fuel.id})">🗑️ Delete</button>
@@ -2768,7 +3125,7 @@ function renderServiceReminders() {
     return `
     <div class="service-item">
       <div class="trip-header">
-        <div class="service-date">🔧 ${service.serviceType}</div>
+        <div class="service-date">🔧 ${service.serviceType}${formatTimestamp(service.lastModified)}</div>
         <div class="trip-actions">
           <button class="btn btn-small btn-edit" onclick="editService(${service.id})">✏️ Edit</button>
           <button class="btn btn-small btn-delete" onclick="deleteService(${service.id})">🗑️ Delete</button>
@@ -2811,7 +3168,7 @@ function renderChecklists() {
     return `
     <div class="checklist-item">
       <div class="trip-header">
-        <div class="checklist-date">✅ ${formatDate(checklist.date)}</div>
+        <div class="checklist-date">✅ ${formatDate(checklist.date)}${formatTimestamp(checklist.lastModified)}</div>
         <div class="trip-actions">
           <span class="status-badge ${allPassed ? 'status-ok' : 'status-issue'}">${allPassed ? '✓ All OK' : '⚠️ Issues Found'}</span>
           <button class="btn btn-small btn-delete" onclick="deleteChecklist(${checklist.id})">🗑️ Delete</button>
@@ -2830,6 +3187,7 @@ function renderChecklists() {
           <div>${checklist.items.lights ? '✅' : '❌'} Lights</div><div>${checklist.items.wipers ? '✅' : '❌'} Wipers</div>
           <div>${checklist.items.battery ? '✅' : '❌'} Battery</div><div>${checklist.items.mirrors ? '✅' : '❌'} Mirrors</div>
           <div>${checklist.items.belts ? '✅' : '❌'} Drive Belts</div><div>${checklist.items.fuel ? '✅' : '❌'} Fuel Level</div>
+          <div>${checklist.items.other ? '✅' : '❌'} other</div>
         </div>
       </div>
       ${checklist.notes ? `<div class="trip-notes">📝 ${checklist.notes}</div>` : ''}
@@ -2862,7 +3220,7 @@ function renderIncidents() {
   incidentList.innerHTML = filteredIncidents.map(incident => `
     <div class="incident-item">
       <div class="trip-header">
-        <div class="incident-date">⚠️ ${formatDate(incident.date)} ${incident.time ? '• ' + incident.time : ''}</div>
+        <div class="incident-date">⚠️ ${formatDate(incident.date)} ${incident.time ? '• ' + incident.time : ''}${formatTimestamp(incident.lastModified)}</div>
         <div class="trip-actions">
           <button class="btn btn-small btn-delete" onclick="deleteIncident(${incident.id})">🗑️ Delete</button>
         </div>
@@ -2878,6 +3236,8 @@ function renderIncidents() {
     </div>
   `).join('');
 }
+
+// ========== EDIT/DELETE FUNCTIONS ==========
 
 function editTrip(id) {
   const trip = trips.find(t => t.id === id);
@@ -2993,6 +3353,8 @@ function deleteIncident(id) {
   showToast('🗑️ Incident report deleted');
 }
 
+// ========== STATISTICS ==========
+
 function updateStatistics() {
   const filteredTrips = trips.filter(t => isWithinGlobalDateRange(t.date));
   const filteredFuel = fuelEntries.filter(f => isWithinGlobalDateRange(f.date));
@@ -3000,16 +3362,375 @@ function updateStatistics() {
   const totalDistance = filteredTrips.reduce((sum, trip) => sum + trip.distance, 0);
   const totalFuelLiters = filteredFuel.reduce((sum, fuel) => sum + fuel.liters, 0);
   const totalFuelCost = filteredFuel.reduce((sum, fuel) => sum + fuel.cost, 0);
+  
+  let totalTripCost = 0;
+  filteredTrips.forEach(trip => {
+    const cost = calculateTripCost(trip.vehicleReg, trip.distance);
+    if (cost !== null) {
+      totalTripCost += cost;
+    }
+  });
+  
   document.getElementById('totalTrips').textContent = totalTrips;
   document.getElementById('totalDistance').textContent = totalDistance.toFixed(1) + ' km';
   document.getElementById('totalFuelLiters').textContent = totalFuelLiters.toFixed(1) + ' L';
   document.getElementById('totalFuelCost').textContent = 'R' + totalFuelCost.toFixed(2);
+  document.getElementById('totalTripCost').textContent = 'R' + totalTripCost.toFixed(2);
+}
+
+// ========== EXPORT TO PDF ==========
+
+function exportToPDF() {
+  if (!hasAnyActiveFilters()) {
+    showConfirmDialog('exportNoFilters');
+    return;
+  }
+  
+  // Check which sections to include
+  const includeVehicles = document.getElementById('pdfIncludeVehicles').checked;
+  const includeTrips = document.getElementById('pdfIncludeTrips').checked;
+  const includeFuel = document.getElementById('pdfIncludeFuel').checked;
+  const includeChecklists = document.getElementById('pdfIncludeChecklists').checked;
+  const includeIncidents = document.getElementById('pdfIncludeIncidents').checked;
+  
+  const allFilters = {
+    search: document.getElementById('searchInput').value.toLowerCase() || 
+            document.getElementById('fuelSearchInput').value.toLowerCase() ||
+            document.getElementById('checklistSearchInput').value.toLowerCase() ||
+            document.getElementById('incidentSearchInput').value.toLowerCase(),
+    vehicle: document.getElementById('filterVehicle').value.toLowerCase() || 
+             document.getElementById('fuelFilterVehicle').value.toLowerCase() ||
+             document.getElementById('checklistFilterVehicle').value.toLowerCase() ||
+             document.getElementById('incidentFilterVehicle').value.toLowerCase(),
+    driver: document.getElementById('filterDriver').value.toLowerCase() || 
+            document.getElementById('fuelFilterDriver').value.toLowerCase() ||
+            document.getElementById('checklistFilterDriver').value.toLowerCase() ||
+            document.getElementById('incidentFilterDriver').value.toLowerCase(),
+    reference: document.getElementById('filterReference').value.toLowerCase(),
+    incidentType: document.getElementById('incidentFilterType').value
+  };
+  
+  const filteredTrips = trips.filter(item => {
+    const matchesSearch = !allFilters.search || item.startLocation.toLowerCase().includes(allFilters.search) || 
+      item.endLocation.toLowerCase().includes(allFilters.search) || item.notes.toLowerCase().includes(allFilters.search) || 
+      item.reference.toLowerCase().includes(allFilters.search) || item.driverName.toLowerCase().includes(allFilters.search) || 
+      item.vehicleReg.toLowerCase().includes(allFilters.search);
+    const matchesVehicle = !allFilters.vehicle || item.vehicleReg.toLowerCase().includes(allFilters.vehicle);
+    const matchesDriver = !allFilters.driver || item.driverName.toLowerCase().includes(allFilters.driver);
+    const matchesReference = !allFilters.reference || item.reference.toLowerCase().includes(allFilters.reference);
+    const matchesDateRange = isWithinGlobalDateRange(item.date);
+    return matchesSearch && matchesVehicle && matchesDriver && matchesReference && matchesDateRange;
+  });
+  
+  const filteredFuel = fuelEntries.filter(item => {
+    const matchesSearch = !allFilters.search || item.driverName.toLowerCase().includes(allFilters.search) || 
+      item.vehicleReg.toLowerCase().includes(allFilters.search) || item.station.toLowerCase().includes(allFilters.search) || 
+      item.notes.toLowerCase().includes(allFilters.search);
+    const matchesVehicle = !allFilters.vehicle || item.vehicleReg.toLowerCase().includes(allFilters.vehicle);
+    const matchesDriver = !allFilters.driver || item.driverName.toLowerCase().includes(allFilters.driver);
+    const matchesDateRange = isWithinGlobalDateRange(item.date);
+    return matchesSearch && matchesVehicle && matchesDriver && matchesDateRange;
+  });
+  
+  const filteredChecklists = checklists.filter(item => {
+    const matchesSearch = !allFilters.search || item.driverName.toLowerCase().includes(allFilters.search) || 
+      item.vehicleReg.toLowerCase().includes(allFilters.search) || item.notes.toLowerCase().includes(allFilters.search);
+    const matchesVehicle = !allFilters.vehicle || item.vehicleReg.toLowerCase().includes(allFilters.vehicle);
+    const matchesDriver = !allFilters.driver || item.driverName.toLowerCase().includes(allFilters.driver);
+    const matchesDateRange = isWithinGlobalDateRange(item.date);
+    return matchesSearch && matchesVehicle && matchesDriver && matchesDateRange;
+  });
+  
+  const filteredIncidents = incidents.filter(item => {
+    const matchesSearch = !allFilters.search || item.driverName.toLowerCase().includes(allFilters.search) || 
+      item.vehicleReg.toLowerCase().includes(allFilters.search) || item.location.toLowerCase().includes(allFilters.search) || 
+      item.description.toLowerCase().includes(allFilters.search);
+    const matchesVehicle = !allFilters.vehicle || item.vehicleReg.toLowerCase().includes(allFilters.vehicle);
+    const matchesDriver = !allFilters.driver || item.driverName.toLowerCase().includes(allFilters.driver);
+    const matchesType = !allFilters.incidentType || item.type === allFilters.incidentType;
+    const matchesDateRange = isWithinGlobalDateRange(item.date);
+    return matchesSearch && matchesVehicle && matchesDriver && matchesType && matchesDateRange;
+  });
+  
+  // Calculate all summary stats
+  const totalTrips = filteredTrips.length;
+  const totalDistance = filteredTrips.reduce((sum, trip) => sum + trip.distance, 0);
+  const totalFuelLiters = filteredFuel.reduce((sum, fuel) => sum + fuel.liters, 0);
+  const totalFuelCost = filteredFuel.reduce((sum, fuel) => sum + fuel.cost, 0);
+  
+  let totalTripCost = 0;
+  filteredTrips.forEach(trip => {
+    const cost = calculateTripCost(trip.vehicleReg, trip.distance);
+    if (cost !== null) {
+      totalTripCost += cost;
+    }
+  });
+  
+  const exportDiv = document.getElementById('pdfExportContent');
+  let html = '<div class="pdf-page"><h1 class="pdf-title">🚚 Vehicle Tracker Report - ' + new Date().toLocaleDateString() + '</h1>';
+  
+  // Add comprehensive summary box at the top
+  html += '<div class="pdf-summary-box">';
+  html += `<div class="pdf-summary-item">
+    <div>
+      <div style="font-size: 20px; margin-bottom: 5px;">🚗</div>
+      <span class="pdf-summary-label">Total Trips</span>
+    </div>
+    <span class="pdf-summary-value">${totalTrips}</span>
+  </div>`;
+  
+  html += `<div class="pdf-summary-item">
+    <div>
+      <div style="font-size: 20px; margin-bottom: 5px;">💵</div>
+      <span class="pdf-summary-label">Trip Cost</span>
+    </div>
+    <span class="pdf-summary-value">R${totalTripCost.toFixed(2)}</span>
+  </div>`;
+  
+  html += '</div>';
+  
+  // Add Vehicle Cost Settings section (if checkbox is checked)
+  const vehicles = Object.keys(vehicleCosts);
+  if (includeVehicles && vehicles.length > 0) {
+    html += '<div class="pdf-section"><h2 class="pdf-section-title">🚙 Vehicle Cost Settings</h2>';
+    html += '<table class="pdf-vehicle-table"><thead><tr>';
+    html += '<th>Vehicle Registration</th><th>Cost per KM</th><th>Last Modified</th>';
+    html += '</tr></thead><tbody>';
+    vehicles.forEach(reg => {
+      const data = typeof vehicleCosts[reg] === 'object' ? vehicleCosts[reg] : { cost: vehicleCosts[reg], timestamp: null };
+      html += '<tr>';
+      html += `<td>${reg}</td>`;
+      html += `<td>R${data.cost.toFixed(2)}</td>`;
+      html += `<td style="font-size: 9px;">${data.timestamp || 'N/A'}</td>`;
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+  
+  // Add Trips section (if checkbox is checked)
+  if (includeTrips && filteredTrips.length > 0) {
+    html += '<div class="pdf-section"><h2 class="pdf-section-title">📋 Trips (' + filteredTrips.length + ')</h2>';
+    filteredTrips.forEach(trip => {
+      const tripCost = calculateTripCost(trip.vehicleReg, trip.distance);
+      html += '<div class="pdf-trip-detail">';
+      html += `<div class="pdf-trip-header">${formatDate(trip.date)} ${trip.time ? '• ' + trip.time : ''} - ${trip.vehicleReg}</div>`;
+      html += '<div class="pdf-trip-info">';
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">Driver:</span>
+        <span class="pdf-trip-info-value">${escapeHtml(trip.driverName)}</span>
+        <span class="pdf-timestamp">${trip.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">To:</span>
+        <span class="pdf-trip-info-value">${escapeHtml(trip.endLocation)}</span>
+        <span class="pdf-timestamp">${trip.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">Start KM:</span>
+        <span class="pdf-trip-info-value">${trip.startKm.toFixed(1)} km</span>
+        <span class="pdf-timestamp">${trip.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      if (tripCost !== null) {
+        html += `<div class="pdf-trip-info-item">
+          <span class="pdf-trip-info-label">Trip Cost:</span>
+          <span class="pdf-trip-info-value">R${tripCost.toFixed(2)}</span>
+          <span class="pdf-timestamp">${trip.lastModified || 'N/A'}</span>
+        </div>`;
+      }
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">From:</span>
+        <span class="pdf-trip-info-value">${escapeHtml(trip.startLocation)}</span>
+        <span class="pdf-timestamp">${trip.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">Distance:</span>
+        <span class="pdf-trip-info-value">${trip.distance.toFixed(1)} km</span>
+        <span class="pdf-timestamp">${trip.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">End KM:</span>
+        <span class="pdf-trip-info-value">${trip.endKm.toFixed(1)} km</span>
+        <span class="pdf-timestamp">${trip.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      if (trip.reference) {
+        html += `<div class="pdf-trip-info-item">
+          <span class="pdf-trip-info-label">Reference:</span>
+          <span class="pdf-trip-info-value">${escapeHtml(trip.reference)}</span>
+          <span class="pdf-timestamp">${trip.lastModified || 'N/A'}</span>
+        </div>`;
+      }
+      
+      if (trip.notes) {
+        html += `<div class="pdf-trip-info-item" style="grid-column: 1 / -1;">
+          <span class="pdf-trip-info-label">Notes:</span>
+          <span class="pdf-trip-info-value">${escapeHtml(trip.notes)}</span>
+          <span class="pdf-timestamp">${trip.lastModified || 'N/A'}</span>
+        </div>`;
+      }
+      
+      html += '</div>';
+      if (trip.images && trip.images.length > 0) {
+        html += '<div style="margin-top: 15px;"><strong style="font-size: 12px; color: #333;">📷 Destination Photos:</strong></div><div class="pdf-gallery">';
+        trip.images.forEach(img => { html += `<img src="${img}" alt="Trip Photo">`; });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+  
+  // Add Fuel section (if checkbox is checked)
+  if (includeFuel && filteredFuel.length > 0) {
+    html += '<div class="pdf-section"><h2 class="pdf-section-title">⛽Fuel Entries (' + filteredFuel.length + ')</h2>';
+    filteredFuel.forEach(fuel => {
+      html += '<div class="pdf-trip-detail">';
+      html += `<div class="pdf-trip-header" style="color: #28a745 !important;">${formatDate(fuel.date)} ${fuel.time ? '• ' + fuel.time : ''} - ${fuel.vehicleReg}</div>`;
+      html += '<div class="pdf-trip-info">';
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">Driver:</span>
+        <span class="pdf-trip-info-value">${escapeHtml(fuel.driverName)}</span>
+        <span class="pdf-timestamp">${fuel.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">KM Reading:</span>
+        <span class="pdf-trip-info-value">${fuel.kmReading.toFixed(1)} km</span>
+        <span class="pdf-timestamp">${fuel.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">Liters:</span>
+        <span class="pdf-trip-info-value">${fuel.liters.toFixed(1)} L</span>
+        <span class="pdf-timestamp">${fuel.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">Cost:</span>
+        <span class="pdf-trip-info-value">R${fuel.cost.toFixed(2)}</span>
+        <span class="pdf-timestamp">${fuel.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">Price/L:</span>
+        <span class="pdf-trip-info-value">R${(fuel.cost / fuel.liters).toFixed(2)}</span>
+        <span class="pdf-timestamp">${fuel.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      if (fuel.station) {
+        html += `<div class="pdf-trip-info-item">
+          <span class="pdf-trip-info-label">Station:</span>
+          <span class="pdf-trip-info-value">${escapeHtml(fuel.station)}</span>
+          <span class="pdf-timestamp">${fuel.lastModified || 'N/A'}</span>
+        </div>`;
+      }
+      
+      if (fuel.notes) {
+        html += `<div class="pdf-trip-info-item" style="grid-column: 1 / -1;">
+          <span class="pdf-trip-info-label">Notes:</span>
+          <span class="pdf-trip-info-value">${escapeHtml(fuel.notes)}</span>
+          <span class="pdf-timestamp">${fuel.lastModified || 'N/A'}</span>
+        </div>`;
+      }
+      
+      html += '</div>';
+      if (fuel.receiptImage) {
+        html += '<div style="margin-top: 15px;"><strong style="font-size: 12px; color: #333;">📷 Receipt:</strong></div>';
+        html += `<div style="margin-top: 10px;"><img src="${fuel.receiptImage}" style="max-width: 100%; max-height: 350px; border: 2px solid #ccc; border-radius: 6px;"></div>`;
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+  
+  // Add Incidents section (if checkbox is checked)
+  if (includeIncidents && filteredIncidents.length > 0) {
+    html += '<div class="pdf-section"><h2 class="pdf-section-title">⚠️ Incidents (' + filteredIncidents.length + ')</h2>';
+    filteredIncidents.forEach(i => {
+      html += '<div class="pdf-trip-detail">';
+      html += `<div class="pdf-trip-header" style="color: #dc3545 !important;">${formatDate(i.date)} ${i.time ? '• ' + i.time : ''} - ${i.vehicleReg}</div>`;
+      html += '<div class="pdf-trip-info">';
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">Driver:</span>
+        <span class="pdf-trip-info-value">${escapeHtml(i.driverName)}</span>
+        <span class="pdf-timestamp">${i.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">Location:</span>
+        <span class="pdf-trip-info-value">${escapeHtml(i.location)}</span>
+        <span class="pdf-timestamp">${i.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item">
+        <span class="pdf-trip-info-label">Type:</span>
+        <span class="pdf-trip-info-value">${i.type}</span>
+        <span class="pdf-timestamp">${i.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += `<div class="pdf-trip-info-item" style="grid-column: 1 / -1;">
+        <span class="pdf-trip-info-label">Description:</span>
+        <span class="pdf-trip-info-value">${escapeHtml(i.description)}</span>
+        <span class="pdf-timestamp">${i.lastModified || 'N/A'}</span>
+      </div>`;
+      
+      html += '</div>';
+      if (i.images && i.images.length > 0) {
+        html += '<div style="margin-top: 15px;"><strong style="font-size: 12px; color: #333;">📷 Damage Photos:</strong></div><div class="pdf-gallery">';
+        i.images.forEach(img => { html += `<img src="${img}" alt="Incident Photo">`; });
+        html += '</div>';
+      }
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+  
+  // Add Checklists section (if checkbox is checked)
+  if (includeChecklists && filteredChecklists.length > 0) {
+    html += '<div class="pdf-section"><h2 class="pdf-section-title">✅ Vehicle Checklists (' + filteredChecklists.length + ')</h2>';
+    html += '<table class="pdf-table"><thead><tr>';
+    html += '<th>Date</th><th>Driver</th><th>Vehicle</th><th>KM</th><th>Tires</th><th>Oil</th><th>Water</th><th>Brakes</th><th>Lights</th><th>Wipers</th><th>Battery</th><th>Mirrors</th><th>Belts</th><th>Fuel</th><th>Notes</th><th>Modified</th>';
+    html += '</tr></thead><tbody>';
+    filteredChecklists.forEach(c => {
+      html += '<tr>';
+      html += `<td>${c.date}</td><td>${escapeHtml(c.driverName)}</td><td>${c.vehicleReg}</td><td>${c.kmReading.toFixed(1)}</td>`;
+      html += `<td>${c.items.tires ? '✓' : '✗'}</td><td>${c.items.oil ? '✓' : '✗'}</td><td>${c.items.water ? '✓' : '✗'}</td><td>${c.items.brakes ? '✓' : '✗'}</td>`;
+      html += `<td>${c.items.lights ? '✓' : '✗'}</td><td>${c.items.wipers ? '✓' : '✗'}</td><td>${c.items.battery ? '✓' : '✗'}</td><td>${c.items.mirrors ? '✓' : '✗'}</td>`;
+      html += `<td>${c.items.belts ? '✓' : '✗'}</td><td>${c.items.fuel ? '✓' : '✗'}</td><td>${escapeHtml(c.notes)}</td><td style="font-size: 8px;">${c.lastModified || 'N/A'}</td>`;
+      html += '</tr>';
+    });
+    html += '</tbody></table></div>';
+  }
+  
+  html += '</div>';
+  exportDiv.innerHTML = html;
+  setTimeout(() => window.print(), 100);
+}
+
+// ========== UTILITY FUNCTIONS ==========
+
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
 }
 
 function formatDate(dateString) {
   const date = new Date(dateString);
   return date.toLocaleDateString('en-US', { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' });
 }
+
+// ========== INPUT LISTENERS ==========
 
 document.getElementById('searchInput').addEventListener('input', renderTrips);
 document.getElementById('filterVehicle').addEventListener('input', renderTrips);
